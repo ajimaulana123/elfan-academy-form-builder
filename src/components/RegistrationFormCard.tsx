@@ -11,8 +11,39 @@ import { SchoolDataForm } from "@/components/forms/SchoolDataForm";
 import { SubmitSection } from "@/components/forms/SubmitSection";
 import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { CalendarDays, User, Users, GraduationCap, ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarDays, User, Users, GraduationCap, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+// Define fields for each step
+const STEP_FIELDS = {
+  personal: [
+    "namaLengkap",
+    "tempatLahir", 
+    "tanggalLahir",
+    "jenisKelamin",
+    "tinggiBadan",
+    "beratBadan",
+    "nomorKTP",
+    "alamatLengkap",
+    "email",
+    "noTelpon",
+  ] as const,
+  parent: [
+    "namaAyah",
+    "alamatAyah",
+    "pekerjaanAyah",
+    "noTelponAyah",
+    "namaIbu",
+    "alamatIbu",
+    "pekerjaanIbu",
+    "noTelponIbu",
+  ] as const,
+  school: [
+    "asalSekolah",
+    "jurusan",
+    "alamatSekolah",
+  ] as const,
+};
 
 const STEPS = [
   { id: "personal", label: "Data Pribadi", icon: User },
@@ -25,6 +56,7 @@ type StepId = typeof STEPS[number]["id"];
 export function RegistrationFormCard() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeStep, setActiveStep] = useState<StepId>("personal");
+  const [completedSteps, setCompletedSteps] = useState<Set<StepId>>(new Set());
   
   const form = useForm<RegistrationFormType>({
     resolver: zodResolver(registrationSchema),
@@ -52,15 +84,13 @@ export function RegistrationFormCard() {
       jurusan: "",
       alamatSekolah: "",
     },
+    mode: "onChange",
   });
 
   const onSubmit = async (data: RegistrationFormType) => {
     setIsSubmitting(true);
     
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    
-    console.log("Form submitted:", data);
     
     toast({
       title: "Pendaftaran Berhasil! 🎉",
@@ -70,12 +100,31 @@ export function RegistrationFormCard() {
     setIsSubmitting(false);
     form.reset();
     setActiveStep("personal");
+    setCompletedSteps(new Set());
   };
 
   const currentStepIndex = STEPS.findIndex(s => s.id === activeStep);
   
-  const goToNextStep = () => {
-    if (currentStepIndex < STEPS.length - 1) {
+  const validateCurrentStep = async (): Promise<boolean> => {
+    const currentFields = STEP_FIELDS[activeStep];
+    const result = await form.trigger(currentFields as unknown as (keyof RegistrationFormType)[]);
+    
+    if (!result) {
+      toast({
+        title: "Mohon lengkapi data",
+        description: "Silakan isi semua field yang wajib dengan benar sebelum melanjutkan.",
+        variant: "destructive",
+      });
+    }
+    
+    return result;
+  };
+  
+  const goToNextStep = async () => {
+    const isValid = await validateCurrentStep();
+    
+    if (isValid && currentStepIndex < STEPS.length - 1) {
+      setCompletedSteps(prev => new Set([...prev, activeStep]));
       setActiveStep(STEPS[currentStepIndex + 1].id);
     }
   };
@@ -83,6 +132,25 @@ export function RegistrationFormCard() {
   const goToPrevStep = () => {
     if (currentStepIndex > 0) {
       setActiveStep(STEPS[currentStepIndex - 1].id);
+    }
+  };
+  
+  const handleStepClick = async (stepId: StepId) => {
+    const targetIndex = STEPS.findIndex(s => s.id === stepId);
+    
+    // Allow going back without validation
+    if (targetIndex < currentStepIndex) {
+      setActiveStep(stepId);
+      return;
+    }
+    
+    // For forward navigation, validate current step first
+    if (targetIndex > currentStepIndex) {
+      const isValid = await validateCurrentStep();
+      if (isValid) {
+        setCompletedSteps(prev => new Set([...prev, activeStep]));
+        setActiveStep(stepId);
+      }
     }
   };
 
@@ -104,30 +172,35 @@ export function RegistrationFormCard() {
       <CardContent className="p-4 md:p-8">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <Tabs value={activeStep} onValueChange={(v) => setActiveStep(v as StepId)} className="w-full">
+            <Tabs value={activeStep} className="w-full">
               {/* Step Navigation */}
               <TabsList className="w-full h-auto p-2 bg-secondary/50 backdrop-blur-sm rounded-xl mb-8 grid grid-cols-3 gap-2">
                 {STEPS.map((step, index) => {
                   const Icon = step.icon;
                   const isActive = activeStep === step.id;
-                  const isCompleted = currentStepIndex > index;
+                  const isCompleted = completedSteps.has(step.id);
                   
                   return (
                     <TabsTrigger
                       key={step.id}
                       value={step.id}
+                      onClick={() => handleStepClick(step.id)}
                       className={cn(
                         "flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-3 px-2 sm:px-4 rounded-lg transition-all duration-300",
                         "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg",
                         "data-[state=inactive]:hover:bg-secondary/80",
-                        isCompleted && "text-primary"
+                        isCompleted && !isActive && "text-[hsl(var(--success))] border border-[hsl(var(--success)/0.3)]"
                       )}
                     >
                       <div className={cn(
                         "flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300",
-                        isActive ? "bg-primary-foreground/20" : isCompleted ? "bg-primary/20" : "bg-muted"
+                        isActive ? "bg-primary-foreground/20" : isCompleted ? "bg-[hsl(var(--success)/0.2)]" : "bg-muted"
                       )}>
-                        <Icon className="h-4 w-4" />
+                        {isCompleted && !isActive ? (
+                          <CheckCircle2 className="h-4 w-4 text-[hsl(var(--success))]" />
+                        ) : (
+                          <Icon className="h-4 w-4" />
+                        )}
                       </div>
                       <span className="text-xs sm:text-sm font-medium text-center sm:text-left">{step.label}</span>
                     </TabsTrigger>
