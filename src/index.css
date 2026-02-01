@@ -43,6 +43,8 @@
     --blue-glow: 220 90% 66%;
     --pink: 330 80% 60%;
     --cyan: 180 70% 50%;
+    --success: 142 76% 36%;
+    --success-foreground: 142 76% 90%;
     
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(262 83% 58%), hsl(220 90% 56%));
