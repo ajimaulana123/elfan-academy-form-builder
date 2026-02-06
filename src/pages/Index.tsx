@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Sparkles, Play } from "lucide-react";
+import { Sparkles, Play, ShieldCheck } from "lucide-react";
 import { FloatingBadges } from "@/components/FloatingBadges";
 import { RegistrationFormCard } from "@/components/RegistrationFormCard";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   return (
@@ -87,8 +88,14 @@ const Index = () => {
       
       {/* Footer */}
       <footer className="relative py-8 border-t border-border/30">
-        <div className="container px-4 text-center text-sm text-muted-foreground">
-          © 2026 Elfan AI Academy. All Rights Reserved.
+        <div className="container px-4 flex items-center justify-between">
+          <span className="text-sm text-muted-foreground">© 2026 Elfan AI Academy. All Rights Reserved.</span>
+          <Link to="/auth">
+            <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-primary">
+              <ShieldCheck className="h-4 w-4" />
+              <span className="hidden sm:inline">Admin</span>
+            </Button>
+          </Link>
         </div>
       </footer>
     </div>
