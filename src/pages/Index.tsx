@@ -65,26 +65,6 @@ const Index = () => {
         </div>
       </main>
 
-      {/* Trusted By Section */}
-      <section className="relative py-16 border-t border-border/30">
-        <div className="container px-4">
-          <p className="text-center text-muted-foreground mb-8">
-            Trusted by world&apos;s largest companies including...
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 opacity-60">
-            {["Spotify", "facebook", "tinder", "airbnb", "Cadbury", "Canon", "Spark"].map((company) => (
-              <span
-                key={company}
-                className="text-xl md:text-2xl font-semibold text-muted-foreground/80"
-                style={{ fontFamily: company === "tinder" || company === "Cadbury" ? "cursive" : "inherit" }}
-              >
-                {company}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="relative py-8 border-t border-border/30">
         <div className="container px-4 flex items-center justify-between">
