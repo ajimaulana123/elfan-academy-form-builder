@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { supabase } from "@/integrations/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -90,17 +91,31 @@ export function RegistrationFormCard() {
   const onSubmit = async (data: RegistrationFormType) => {
     setIsSubmitting(true);
     
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    
-    toast({
-      title: "Pendaftaran Berhasil! 🎉",
-      description: "Data Anda telah berhasil dikirim. Kami akan menghubungi Anda segera.",
-    });
-    
-    setIsSubmitting(false);
-    form.reset();
-    setActiveStep("personal");
-    setCompletedSteps(new Set());
+    try {
+      const { data: result, error } = await supabase.functions.invoke("submit-registration", {
+        body: data,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Pendaftaran Berhasil! 🎉",
+        description: "Data Anda telah berhasil disimpan ke database. Kami akan menghubungi Anda segera.",
+      });
+
+      form.reset();
+      setActiveStep("personal");
+      setCompletedSteps(new Set());
+    } catch (error: any) {
+      console.error("Submit error:", error);
+      toast({
+        title: "Gagal Mengirim Pendaftaran",
+        description: error?.message || "Terjadi kesalahan. Silakan coba lagi.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const currentStepIndex = STEPS.findIndex(s => s.id === activeStep);
