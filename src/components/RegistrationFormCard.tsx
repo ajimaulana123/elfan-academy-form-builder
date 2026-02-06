@@ -170,7 +170,7 @@ export function RegistrationFormCard() {
   };
 
   return (
-    <Card className="glass-card max-w-4xl mx-auto overflow-hidden card-animated">
+    <Card id="registration-form" className="glass-card max-w-4xl mx-auto overflow-hidden card-animated">
       <CardHeader className="text-center pb-2 pt-8">
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mx-auto mb-4">
           <CalendarDays className="h-4 w-4" />
