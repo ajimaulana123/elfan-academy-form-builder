@@ -16,7 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { User } from "lucide-react";
+import { User, FileText } from "lucide-react";
+import { FileUploadField } from "./FileUploadField";
 
 interface PersonalDataFormProps {
   form: UseFormReturn<RegistrationForm>;
@@ -198,6 +199,95 @@ export function PersonalDataForm({ form }: PersonalDataFormProps) {
             </FormItem>
           )}
         />
+      </div>
+
+      {/* Document Uploads Section */}
+      <div className="mt-8 pt-6 border-t border-border/30">
+        <h4 className="text-base font-semibold text-foreground flex items-center gap-2 mb-4">
+          <FileText className="h-4 w-4 text-primary" />
+          <span>Unggah Dokumen</span>
+        </h4>
+        <div className="grid gap-4 md:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="akta"
+            render={({ field }) => (
+              <FormItem>
+                <FileUploadField
+                  label="Akta Kelahiran"
+                  fieldName="akta"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="kk"
+            render={({ field }) => (
+              <FormItem>
+                <FileUploadField
+                  label="Kartu Keluarga (KK)"
+                  fieldName="kk"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="ktp"
+            render={({ field }) => (
+              <FormItem>
+                <FileUploadField
+                  label="KTP"
+                  fieldName="ktp"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="ijazah"
+            render={({ field }) => (
+              <FormItem>
+                <FileUploadField
+                  label="Ijazah"
+                  fieldName="ijazah"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="buktiTransfer"
+            render={({ field }) => (
+              <FormItem className="md:col-span-2">
+                <FileUploadField
+                  label="Bukti Transfer"
+                  fieldName="buktiTransfer"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
       </div>
     </div>
   );

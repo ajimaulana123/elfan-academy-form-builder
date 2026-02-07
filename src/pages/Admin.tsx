@@ -22,6 +22,7 @@ import {
   ChevronUp,
   Loader2,
   ArrowLeft,
+  ExternalLink,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -38,6 +39,11 @@ interface Registration {
   email: string;
   no_telpon: string;
   instagram: string | null;
+  akta_url: string | null;
+  kk_url: string | null;
+  ktp_url: string | null;
+  ijazah_url: string | null;
+  bukti_transfer_url: string | null;
   nama_ayah: string;
   alamat_ayah: string;
   pekerjaan_ayah: string;
@@ -283,6 +289,19 @@ const Admin = () => {
                                     <DetailItem label="Telepon" value={reg.no_telpon} />
                                     {reg.instagram && <DetailItem label="Instagram" value={reg.instagram} />}
                                   </div>
+                                  {/* Documents */}
+                                  {(reg.akta_url || reg.kk_url || reg.ktp_url || reg.ijazah_url || reg.bukti_transfer_url) && (
+                                    <div className="mt-3 pt-3 border-t border-border/30">
+                                      <p className="text-xs text-muted-foreground mb-2">Dokumen:</p>
+                                      <div className="flex flex-wrap gap-2">
+                                        {reg.akta_url && <DocLink label="Akta" url={reg.akta_url} />}
+                                        {reg.kk_url && <DocLink label="KK" url={reg.kk_url} />}
+                                        {reg.ktp_url && <DocLink label="KTP" url={reg.ktp_url} />}
+                                        {reg.ijazah_url && <DocLink label="Ijazah" url={reg.ijazah_url} />}
+                                        {reg.bukti_transfer_url && <DocLink label="Bukti Transfer" url={reg.bukti_transfer_url} />}
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
                                 {/* Parents */}
                                 <div className="space-y-3">
@@ -330,6 +349,20 @@ function DetailItem({ label, value }: { label: string; value: string }) {
       <span className="text-muted-foreground">{label}:</span>{" "}
       <span className="text-foreground">{value}</span>
     </div>
+  );
+}
+
+function DocLink({ label, url }: { label: string; url: string }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors"
+    >
+      {label}
+      <ExternalLink className="h-3 w-3" />
+    </a>
   );
 }
 
