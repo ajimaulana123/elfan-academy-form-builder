@@ -30,6 +30,7 @@ Deno.serve(async (req) => {
       "email", "noTelpon", "namaAyah", "alamatAyah", "pekerjaanAyah",
       "noTelponAyah", "namaIbu", "alamatIbu", "pekerjaanIbu",
       "noTelponIbu", "asalSekolah", "jurusan", "alamatSekolah",
+      "akta", "kk", "ktp", "ijazah", "buktiTransfer",
     ];
 
     for (const field of requiredFields) {
@@ -53,7 +54,7 @@ Deno.serve(async (req) => {
 
     const sql = neon(databaseUrl);
 
-    // Create table if not exists
+    // Create table if not exists (with document URL columns)
     await sql`
       CREATE TABLE IF NOT EXISTS registrations (
         id SERIAL PRIMARY KEY,
@@ -68,6 +69,11 @@ Deno.serve(async (req) => {
         email VARCHAR(255) NOT NULL,
         no_telpon VARCHAR(15) NOT NULL,
         instagram VARCHAR(50),
+        akta_url TEXT,
+        kk_url TEXT,
+        ktp_url TEXT,
+        ijazah_url TEXT,
+        bukti_transfer_url TEXT,
         nama_ayah VARCHAR(100) NOT NULL,
         alamat_ayah TEXT NOT NULL,
         pekerjaan_ayah VARCHAR(100) NOT NULL,
@@ -83,12 +89,26 @@ Deno.serve(async (req) => {
       )
     `;
 
+    // Add columns if they don't exist (for existing tables)
+    const docColumns = ['akta_url', 'kk_url', 'ktp_url', 'ijazah_url', 'bukti_transfer_url'];
+    for (const col of docColumns) {
+      try {
+        await sql`
+          ALTER TABLE registrations ADD COLUMN IF NOT EXISTS ${sql(col)} TEXT
+        `;
+      } catch (e) {
+        // Column may already exist, ignore error
+        console.log(`Column ${col} check:`, e);
+      }
+    }
+
     // Insert data
     const result = await sql`
       INSERT INTO registrations (
         nama_lengkap, tempat_lahir, tanggal_lahir, jenis_kelamin,
         tinggi_badan, berat_badan, nomor_ktp, alamat_lengkap,
         email, no_telpon, instagram,
+        akta_url, kk_url, ktp_url, ijazah_url, bukti_transfer_url,
         nama_ayah, alamat_ayah, pekerjaan_ayah, no_telpon_ayah,
         nama_ibu, alamat_ibu, pekerjaan_ibu, no_telpon_ibu,
         asal_sekolah, jurusan, alamat_sekolah
@@ -96,6 +116,7 @@ Deno.serve(async (req) => {
         ${body.namaLengkap}, ${body.tempatLahir}, ${body.tanggalLahir}, ${body.jenisKelamin},
         ${body.tinggiBadan}, ${body.beratBadan}, ${body.nomorKTP}, ${body.alamatLengkap},
         ${body.email}, ${body.noTelpon}, ${body.instagram || null},
+        ${body.akta || null}, ${body.kk || null}, ${body.ktp || null}, ${body.ijazah || null}, ${body.buktiTransfer || null},
         ${body.namaAyah}, ${body.alamatAyah}, ${body.pekerjaanAyah}, ${body.noTelponAyah},
         ${body.namaIbu}, ${body.alamatIbu}, ${body.pekerjaanIbu}, ${body.noTelponIbu},
         ${body.asalSekolah}, ${body.jurusan}, ${body.alamatSekolah}

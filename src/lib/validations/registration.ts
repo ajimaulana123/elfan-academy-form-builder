@@ -40,6 +40,14 @@ const ktpField = z.string()
   .max(16, { message: "Nomor KTP harus 16 digit" })
   .regex(/^[0-9]+$/, { message: "Nomor KTP hanya boleh angka" });
 
+const documentUrlField = (fieldName: string) =>
+  z.string()
+    .min(1, { message: `${fieldName} wajib diunggah` })
+    .url({ message: `URL ${fieldName} tidak valid` });
+
+const optionalDocumentUrlField = () =>
+  z.string().url().optional().or(z.literal(''));
+
 export const personalDataSchema = z.object({
   namaLengkap: stringField(2, 100, "Nama lengkap"),
   tempatLahir: stringField(2, 50, "Tempat lahir"),
@@ -58,6 +66,12 @@ export const personalDataSchema = z.object({
   email: emailField,
   noTelpon: phoneField("Nomor telepon"),
   instagram: optionalStringField(50),
+  // Document uploads
+  akta: documentUrlField("Akta"),
+  kk: documentUrlField("KK"),
+  ktp: documentUrlField("KTP"),
+  ijazah: documentUrlField("Ijazah"),
+  buktiTransfer: documentUrlField("Bukti Transfer"),
 });
 
 export const parentDataSchema = z.object({
