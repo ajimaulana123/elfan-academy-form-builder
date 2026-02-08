@@ -23,40 +23,15 @@ import {
   Loader2,
   ArrowLeft,
   ExternalLink,
+  Eye,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-interface Registration {
-  id: string;
-  nama_lengkap: string;
-  tempat_lahir: string;
-  tanggal_lahir: string;
-  jenis_kelamin: string;
-  tinggi_badan: string;
-  berat_badan: string;
-  nomor_ktp: string;
-  alamat_lengkap: string;
-  email: string;
-  no_telpon: string;
-  instagram: string | null;
-  akta_url: string | null;
-  kk_url: string | null;
-  ktp_url: string | null;
-  ijazah_url: string | null;
-  bukti_transfer_url: string | null;
-  nama_ayah: string;
-  alamat_ayah: string;
-  pekerjaan_ayah: string;
-  no_telpon_ayah: string;
-  nama_ibu: string;
-  alamat_ibu: string;
-  pekerjaan_ibu: string;
-  no_telpon_ibu: string;
-  asal_sekolah: string;
-  jurusan: string;
-  alamat_sekolah: string;
-  created_at: string;
-}
+import { DocumentViewer } from "@/components/admin/DocumentViewer";
+import { EditRegistrationDialog } from "@/components/admin/EditRegistrationDialog";
+import { DeleteRegistrationDialog } from "@/components/admin/DeleteRegistrationDialog";
+import type { Registration } from "@/types/registration";
 
 const Admin = () => {
   const { user, signOut } = useAuth();
@@ -66,13 +41,16 @@ const Admin = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
 
+  // Dialog states
+  const [docViewerReg, setDocViewerReg] = useState<Registration | null>(null);
+  const [editReg, setEditReg] = useState<Registration | null>(null);
+  const [deleteReg, setDeleteReg] = useState<Registration | null>(null);
+
   const fetchRegistrations = async () => {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("fetch-registrations");
-      
       if (error) throw error;
-      
       setRegistrations(data?.registrations || []);
     } catch (error: any) {
       console.error("Error fetching registrations:", error);
@@ -94,6 +72,23 @@ const Admin = () => {
     await signOut();
     navigate("/auth", { replace: true });
   };
+
+  const handleUpdated = (updated: Registration) => {
+    setRegistrations(prev => prev.map(r => r.id === updated.id ? updated : r));
+  };
+
+  const handleDeleted = (id: string) => {
+    setRegistrations(prev => prev.filter(r => r.id !== id));
+    if (expandedRow === id) setExpandedRow(null);
+  };
+
+  const getDocuments = (reg: Registration) => [
+    { label: "Akta", url: reg.akta_url },
+    { label: "KK", url: reg.kk_url },
+    { label: "KTP", url: reg.ktp_url },
+    { label: "Ijazah", url: reg.ijazah_url },
+    { label: "Bukti Transfer", url: reg.bukti_transfer_url },
+  ];
 
   const filteredRegistrations = registrations.filter((reg) => {
     const q = searchQuery.toLowerCase();
@@ -227,9 +222,9 @@ const Admin = () => {
                       <TableHead>Nama Lengkap</TableHead>
                       <TableHead className="hidden md:table-cell">Email</TableHead>
                       <TableHead className="hidden lg:table-cell">Asal Sekolah</TableHead>
-                      <TableHead className="hidden sm:table-cell">Jenis Kelamin</TableHead>
+                      <TableHead className="hidden sm:table-cell">JK</TableHead>
                       <TableHead className="hidden xl:table-cell">Tanggal Daftar</TableHead>
-                      <TableHead className="w-12"></TableHead>
+                      <TableHead className="text-right">Aksi</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -237,8 +232,7 @@ const Admin = () => {
                       <>
                         <TableRow
                           key={reg.id}
-                          className="border-border/20 cursor-pointer hover:bg-secondary/30 transition-colors"
-                          onClick={() => setExpandedRow(expandedRow === reg.id ? null : reg.id)}
+                          className="border-border/20 hover:bg-secondary/30 transition-colors"
                         >
                           <TableCell className="font-mono text-muted-foreground">
                             {index + 1}
@@ -265,11 +259,47 @@ const Admin = () => {
                             {formatDate(reg.created_at)}
                           </TableCell>
                           <TableCell>
-                            {expandedRow === reg.id ? (
-                              <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                            ) : (
-                              <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                            )}
+                            <div className="flex items-center justify-end gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-muted-foreground hover:text-primary"
+                                title="Lihat Dokumen"
+                                onClick={(e) => { e.stopPropagation(); setDocViewerReg(reg); }}
+                              >
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-muted-foreground hover:text-primary"
+                                title="Edit"
+                                onClick={(e) => { e.stopPropagation(); setEditReg(reg); }}
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                                title="Hapus"
+                                onClick={(e) => { e.stopPropagation(); setDeleteReg(reg); }}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-muted-foreground"
+                                onClick={() => setExpandedRow(expandedRow === reg.id ? null : reg.id)}
+                              >
+                                {expandedRow === reg.id ? (
+                                  <ChevronUp className="h-4 w-4" />
+                                ) : (
+                                  <ChevronDown className="h-4 w-4" />
+                                )}
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                         {expandedRow === reg.id && (
@@ -289,7 +319,7 @@ const Admin = () => {
                                     <DetailItem label="Telepon" value={reg.no_telpon} />
                                     {reg.instagram && <DetailItem label="Instagram" value={reg.instagram} />}
                                   </div>
-                                  {/* Documents */}
+                                  {/* Inline doc links */}
                                   {(reg.akta_url || reg.kk_url || reg.ktp_url || reg.ijazah_url || reg.bukti_transfer_url) && (
                                     <div className="mt-3 pt-3 border-t border-border/30">
                                       <p className="text-xs text-muted-foreground mb-2">Dokumen:</p>
@@ -339,6 +369,35 @@ const Admin = () => {
           </CardContent>
         </Card>
       </main>
+
+      {/* Dialogs */}
+      {docViewerReg && (
+        <DocumentViewer
+          open={!!docViewerReg}
+          onOpenChange={(open) => !open && setDocViewerReg(null)}
+          documents={getDocuments(docViewerReg)}
+          registrantName={docViewerReg.nama_lengkap}
+        />
+      )}
+
+      {editReg && (
+        <EditRegistrationDialog
+          open={!!editReg}
+          onOpenChange={(open) => !open && setEditReg(null)}
+          registration={editReg}
+          onUpdated={handleUpdated}
+        />
+      )}
+
+      {deleteReg && (
+        <DeleteRegistrationDialog
+          open={!!deleteReg}
+          onOpenChange={(open) => !open && setDeleteReg(null)}
+          registrationId={deleteReg.id}
+          registrantName={deleteReg.nama_lengkap}
+          onDeleted={handleDeleted}
+        />
+      )}
     </div>
   );
 };

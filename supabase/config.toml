@@ -8,3 +8,9 @@ verify_jwt = false
 
 [functions.fetch-registrations]
 verify_jwt = false
+
+[functions.update-registration]
+verify_jwt = false
+
+[functions.delete-registration]
+verify_jwt = false

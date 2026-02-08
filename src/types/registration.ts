@@ -1,0 +1,31 @@
+export interface Registration {
+  id: string;
+  nama_lengkap: string;
+  tempat_lahir: string;
+  tanggal_lahir: string;
+  jenis_kelamin: string;
+  tinggi_badan: string;
+  berat_badan: string;
+  nomor_ktp: string;
+  alamat_lengkap: string;
+  email: string;
+  no_telpon: string;
+  instagram: string | null;
+  akta_url: string | null;
+  kk_url: string | null;
+  ktp_url: string | null;
+  ijazah_url: string | null;
+  bukti_transfer_url: string | null;
+  nama_ayah: string;
+  alamat_ayah: string;
+  pekerjaan_ayah: string;
+  no_telpon_ayah: string;
+  nama_ibu: string;
+  alamat_ibu: string;
+  pekerjaan_ibu: string;
+  no_telpon_ibu: string;
+  asal_sekolah: string;
+  jurusan: string;
+  alamat_sekolah: string;
+  created_at: string;
+}
