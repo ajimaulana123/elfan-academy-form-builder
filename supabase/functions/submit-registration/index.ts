@@ -1,4 +1,4 @@
-import { neon } from "npm:@neondatabase/serverless@0.10.4";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -7,7 +7,6 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
@@ -42,99 +41,61 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Connect to Neon PostgreSQL using serverless driver
-    const databaseUrl = Deno.env.get("NEON_DATABASE_URL");
-    if (!databaseUrl) {
-      console.error("NEON_DATABASE_URL is not set");
-      return new Response(
-        JSON.stringify({ error: "Database configuration error" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+    // Use service role to bypass RLS for insert
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+
+    const { data, error } = await supabase
+      .from("registrations")
+      .insert({
+        nama_lengkap: body.namaLengkap,
+        tempat_lahir: body.tempatLahir,
+        tanggal_lahir: body.tanggalLahir,
+        jenis_kelamin: body.jenisKelamin,
+        tinggi_badan: body.tinggiBadan,
+        berat_badan: body.beratBadan,
+        nomor_ktp: body.nomorKTP,
+        alamat_lengkap: body.alamatLengkap,
+        email: body.email,
+        no_telpon: body.noTelpon,
+        instagram: body.instagram || null,
+        akta_url: body.akta || null,
+        kk_url: body.kk || null,
+        ktp_url: body.ktp || null,
+        ijazah_url: body.ijazah || null,
+        bukti_transfer_url: body.buktiTransfer || null,
+        nama_ayah: body.namaAyah,
+        alamat_ayah: body.alamatAyah,
+        pekerjaan_ayah: body.pekerjaanAyah,
+        no_telpon_ayah: body.noTelponAyah,
+        nama_ibu: body.namaIbu,
+        alamat_ibu: body.alamatIbu,
+        pekerjaan_ibu: body.pekerjaanIbu,
+        no_telpon_ibu: body.noTelponIbu,
+        asal_sekolah: body.asalSekolah,
+        jurusan: body.jurusan,
+        alamat_sekolah: body.alamatSekolah,
+      })
+      .select("id")
+      .single();
+
+    if (error) {
+      console.error("Insert error:", error);
+      throw error;
     }
 
-    const sql = neon(databaseUrl);
-
-    // Create table if not exists (with document URL columns)
-    await sql`
-      CREATE TABLE IF NOT EXISTS registrations (
-        id SERIAL PRIMARY KEY,
-        nama_lengkap VARCHAR(100) NOT NULL,
-        tempat_lahir VARCHAR(50) NOT NULL,
-        tanggal_lahir VARCHAR(20) NOT NULL,
-        jenis_kelamin VARCHAR(10) NOT NULL,
-        tinggi_badan VARCHAR(10) NOT NULL,
-        berat_badan VARCHAR(10) NOT NULL,
-        nomor_ktp VARCHAR(16) NOT NULL,
-        alamat_lengkap TEXT NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        no_telpon VARCHAR(15) NOT NULL,
-        instagram VARCHAR(50),
-        akta_url TEXT,
-        kk_url TEXT,
-        ktp_url TEXT,
-        ijazah_url TEXT,
-        bukti_transfer_url TEXT,
-        nama_ayah VARCHAR(100) NOT NULL,
-        alamat_ayah TEXT NOT NULL,
-        pekerjaan_ayah VARCHAR(100) NOT NULL,
-        no_telpon_ayah VARCHAR(15) NOT NULL,
-        nama_ibu VARCHAR(100) NOT NULL,
-        alamat_ibu TEXT NOT NULL,
-        pekerjaan_ibu VARCHAR(100) NOT NULL,
-        no_telpon_ibu VARCHAR(15) NOT NULL,
-        asal_sekolah VARCHAR(150) NOT NULL,
-        jurusan VARCHAR(100) NOT NULL,
-        alamat_sekolah TEXT NOT NULL,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-      )
-    `;
-
-    // Add columns if they don't exist (for existing tables)
-    const docColumns = ['akta_url', 'kk_url', 'ktp_url', 'ijazah_url', 'bukti_transfer_url'];
-    for (const col of docColumns) {
-      try {
-        await sql`
-          ALTER TABLE registrations ADD COLUMN IF NOT EXISTS ${sql(col)} TEXT
-        `;
-      } catch (e) {
-        // Column may already exist, ignore error
-        console.log(`Column ${col} check:`, e);
-      }
-    }
-
-    // Insert data
-    const result = await sql`
-      INSERT INTO registrations (
-        nama_lengkap, tempat_lahir, tanggal_lahir, jenis_kelamin,
-        tinggi_badan, berat_badan, nomor_ktp, alamat_lengkap,
-        email, no_telpon, instagram,
-        akta_url, kk_url, ktp_url, ijazah_url, bukti_transfer_url,
-        nama_ayah, alamat_ayah, pekerjaan_ayah, no_telpon_ayah,
-        nama_ibu, alamat_ibu, pekerjaan_ibu, no_telpon_ibu,
-        asal_sekolah, jurusan, alamat_sekolah
-      ) VALUES (
-        ${body.namaLengkap}, ${body.tempatLahir}, ${body.tanggalLahir}, ${body.jenisKelamin},
-        ${body.tinggiBadan}, ${body.beratBadan}, ${body.nomorKTP}, ${body.alamatLengkap},
-        ${body.email}, ${body.noTelpon}, ${body.instagram || null},
-        ${body.akta || null}, ${body.kk || null}, ${body.ktp || null}, ${body.ijazah || null}, ${body.buktiTransfer || null},
-        ${body.namaAyah}, ${body.alamatAyah}, ${body.pekerjaanAyah}, ${body.noTelponAyah},
-        ${body.namaIbu}, ${body.alamatIbu}, ${body.pekerjaanIbu}, ${body.noTelponIbu},
-        ${body.asalSekolah}, ${body.jurusan}, ${body.alamatSekolah}
-      )
-      RETURNING id
-    `;
-
-    console.log("Registration inserted successfully, id:", result[0].id);
+    console.log("Registration inserted successfully, id:", data.id);
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
+      JSON.stringify({
+        success: true,
         message: "Pendaftaran berhasil disimpan",
-        id: result[0].id 
+        id: data.id,
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
-
   } catch (error) {
     console.error("Error processing registration:", error);
     return new Response(

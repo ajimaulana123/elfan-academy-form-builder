@@ -27,7 +27,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 interface Registration {
-  id: number;
+  id: string;
   nama_lengkap: string;
   tempat_lahir: string;
   tanggal_lahir: string;
@@ -64,7 +64,7 @@ const Admin = () => {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [expandedRow, setExpandedRow] = useState<number | null>(null);
+  const [expandedRow, setExpandedRow] = useState<string | null>(null);
 
   const fetchRegistrations = async () => {
     setLoading(true);

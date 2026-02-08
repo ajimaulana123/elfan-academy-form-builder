@@ -48,35 +48,14 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Use service role for admin access to storage
+    // Use service role for storage access
     const supabaseAdmin = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Ensure bucket exists
-    const { data: buckets } = await supabaseAdmin.storage.listBuckets();
-    const bucketExists = buckets?.some((b: any) => b.id === BUCKET_NAME);
-
-    if (!bucketExists) {
-      console.log("Creating storage bucket:", BUCKET_NAME);
-      const { error: createError } = await supabaseAdmin.storage.createBucket(BUCKET_NAME, {
-        public: true,
-        fileSizeLimit: 5 * 1024 * 1024, // 5MB
-        allowedMimeTypes: allowedTypes,
-      });
-
-      if (createError) {
-        console.error("Error creating bucket:", createError);
-        return new Response(
-          JSON.stringify({ error: "Failed to create storage bucket" }),
-          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
-    }
-
     // Decode base64 data
-    const base64Data = fileData.split(",")[1]; // Remove data:mime;base64, prefix
+    const base64Data = fileData.includes(",") ? fileData.split(",")[1] : fileData;
     const binaryString = atob(base64Data);
     const bytes = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {
@@ -88,7 +67,7 @@ Deno.serve(async (req) => {
     const sanitizedName = fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
     const filePath = `${fieldName}/${timestamp}_${sanitizedName}`;
 
-    console.log("Uploading file to:", filePath);
+    console.log("Uploading file to:", filePath, "size:", bytes.length, "type:", fileType);
 
     // Upload to storage
     const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
@@ -101,7 +80,7 @@ Deno.serve(async (req) => {
     if (uploadError) {
       console.error("Upload error:", uploadError);
       return new Response(
-        JSON.stringify({ error: "Gagal mengunggah file", details: String(uploadError) }),
+        JSON.stringify({ error: "Gagal mengunggah file", details: String(uploadError.message) }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }

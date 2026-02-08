@@ -14,7 +14,102 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      registrations: {
+        Row: {
+          akta_url: string | null
+          alamat_ayah: string
+          alamat_ibu: string
+          alamat_lengkap: string
+          alamat_sekolah: string
+          asal_sekolah: string
+          berat_badan: string
+          bukti_transfer_url: string | null
+          created_at: string
+          email: string
+          id: string
+          ijazah_url: string | null
+          instagram: string | null
+          jenis_kelamin: string
+          jurusan: string
+          kk_url: string | null
+          ktp_url: string | null
+          nama_ayah: string
+          nama_ibu: string
+          nama_lengkap: string
+          no_telpon: string
+          no_telpon_ayah: string
+          no_telpon_ibu: string
+          nomor_ktp: string
+          pekerjaan_ayah: string
+          pekerjaan_ibu: string
+          tanggal_lahir: string
+          tempat_lahir: string
+          tinggi_badan: string
+        }
+        Insert: {
+          akta_url?: string | null
+          alamat_ayah: string
+          alamat_ibu: string
+          alamat_lengkap: string
+          alamat_sekolah: string
+          asal_sekolah: string
+          berat_badan: string
+          bukti_transfer_url?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          ijazah_url?: string | null
+          instagram?: string | null
+          jenis_kelamin: string
+          jurusan: string
+          kk_url?: string | null
+          ktp_url?: string | null
+          nama_ayah: string
+          nama_ibu: string
+          nama_lengkap: string
+          no_telpon: string
+          no_telpon_ayah: string
+          no_telpon_ibu: string
+          nomor_ktp: string
+          pekerjaan_ayah: string
+          pekerjaan_ibu: string
+          tanggal_lahir: string
+          tempat_lahir: string
+          tinggi_badan: string
+        }
+        Update: {
+          akta_url?: string | null
+          alamat_ayah?: string
+          alamat_ibu?: string
+          alamat_lengkap?: string
+          alamat_sekolah?: string
+          asal_sekolah?: string
+          berat_badan?: string
+          bukti_transfer_url?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          ijazah_url?: string | null
+          instagram?: string | null
+          jenis_kelamin?: string
+          jurusan?: string
+          kk_url?: string | null
+          ktp_url?: string | null
+          nama_ayah?: string
+          nama_ibu?: string
+          nama_lengkap?: string
+          no_telpon?: string
+          no_telpon_ayah?: string
+          no_telpon_ibu?: string
+          nomor_ktp?: string
+          pekerjaan_ayah?: string
+          pekerjaan_ibu?: string
+          tanggal_lahir?: string
+          tempat_lahir?: string
+          tinggi_badan?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -1,4 +1,3 @@
-import { neon } from "npm:@neondatabase/serverless@0.10.4";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -40,24 +39,21 @@ Deno.serve(async (req) => {
 
     console.log("Authenticated user:", claimsData.claims.sub);
 
-    // Connect to Neon
-    const databaseUrl = Deno.env.get("NEON_DATABASE_URL");
-    if (!databaseUrl) {
-      return new Response(
-        JSON.stringify({ error: "Database configuration error" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+    // Fetch registrations from Supabase table
+    const { data: registrations, error } = await supabase
+      .from("registrations")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Query error:", error);
+      throw error;
     }
 
-    const sql = neon(databaseUrl);
-    const registrations = await sql`
-      SELECT * FROM registrations ORDER BY created_at DESC
-    `;
-
-    console.log(`Fetched ${registrations.length} registrations`);
+    console.log(`Fetched ${registrations?.length || 0} registrations`);
 
     return new Response(
-      JSON.stringify({ registrations }),
+      JSON.stringify({ registrations: registrations || [] }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {
