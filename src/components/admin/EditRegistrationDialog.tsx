@@ -59,7 +59,6 @@ export function EditRegistrationDialog({ open, onOpenChange, registration, onUpd
     try {
       const { data, error } = await supabase.functions.invoke("update-registration", {
         body: { id: registration.id, ...formData },
-        method: "PUT",
       });
 
       if (error) throw error;
