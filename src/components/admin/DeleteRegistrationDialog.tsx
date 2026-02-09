@@ -35,7 +35,6 @@ export function DeleteRegistrationDialog({
     try {
       const { error } = await supabase.functions.invoke("delete-registration", {
         body: { id: registrationId },
-        method: "DELETE",
       });
 
       if (error) throw error;
