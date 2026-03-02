@@ -67,11 +67,11 @@ export const personalDataSchema = z.object({
   noTelpon: phoneField("Nomor telepon"),
   instagram: optionalStringField(50),
   // Document uploads
-  akta: documentUrlField("Akta"),
-  kk: documentUrlField("KK"),
-  ktp: documentUrlField("KTP"),
-  ijazah: documentUrlField("Ijazah"),
-  buktiTransfer: documentUrlField("Bukti Transfer"),
+  akta: optionalDocumentUrlField(),
+  kk: optionalDocumentUrlField(),
+  ktp: optionalDocumentUrlField(),
+  ijazah: optionalDocumentUrlField(),
+  buktiTransfer: optionalDocumentUrlField(),
 });
 
 export const parentDataSchema = z.object({

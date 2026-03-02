@@ -19,17 +19,30 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Get user from auth header
+    const authHeader = req.headers.get("Authorization");
+    let userId: string | null = null;
+
+    if (authHeader?.startsWith("Bearer ")) {
+      const supabaseAuth = createClient(
+        Deno.env.get("SUPABASE_URL")!,
+        Deno.env.get("SUPABASE_ANON_KEY")!,
+        { global: { headers: { Authorization: authHeader } } }
+      );
+      const { data } = await supabaseAuth.auth.getUser();
+      userId = data?.user?.id || null;
+    }
+
     const body = await req.json();
     console.log("Received registration data for:", body.namaLengkap);
 
-    // Validate required fields
+    // Validate required fields (documents are now optional)
     const requiredFields = [
       "namaLengkap", "tempatLahir", "tanggalLahir", "jenisKelamin",
       "tinggiBadan", "beratBadan", "nomorKTP", "alamatLengkap",
       "email", "noTelpon", "namaAyah", "alamatAyah", "pekerjaanAyah",
       "noTelponAyah", "namaIbu", "alamatIbu", "pekerjaanIbu",
       "noTelponIbu", "asalSekolah", "jurusan", "alamatSekolah",
-      "akta", "kk", "ktp", "ijazah", "buktiTransfer",
     ];
 
     for (const field of requiredFields) {
@@ -41,7 +54,6 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Use service role to bypass RLS for insert
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
@@ -50,6 +62,7 @@ Deno.serve(async (req) => {
     const { data, error } = await supabase
       .from("registrations")
       .insert({
+        user_id: userId,
         nama_lengkap: body.namaLengkap,
         tempat_lahir: body.tempatLahir,
         tanggal_lahir: body.tanggalLahir,
