@@ -9,10 +9,11 @@ import { registrationSchema, RegistrationForm as RegistrationFormType } from "@/
 import { PersonalDataForm } from "@/components/forms/PersonalDataForm";
 import { ParentDataForm } from "@/components/forms/ParentDataForm";
 import { SchoolDataForm } from "@/components/forms/SchoolDataForm";
+import { DocumentUploadForm } from "@/components/forms/DocumentUploadForm";
 import { SubmitSection } from "@/components/forms/SubmitSection";
 import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { CalendarDays, User, Users, GraduationCap, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
+import { CalendarDays, User, Users, GraduationCap, FileText, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Define fields for each step
@@ -28,11 +29,6 @@ const STEP_FIELDS = {
     "alamatLengkap",
     "email",
     "noTelpon",
-    "akta",
-    "kk",
-    "ktp",
-    "ijazah",
-    "buktiTransfer",
   ] as const,
   parent: [
     "namaAyah",
@@ -44,6 +40,13 @@ const STEP_FIELDS = {
     "pekerjaanIbu",
     "noTelponIbu",
   ] as const,
+  documents: [
+    "akta",
+    "kk",
+    "ktp",
+    "ijazah",
+    "buktiTransfer",
+  ] as const,
   school: [
     "asalSekolah",
     "jurusan",
@@ -54,6 +57,7 @@ const STEP_FIELDS = {
 const STEPS = [
   { id: "personal", label: "Data Pribadi", icon: User },
   { id: "parent", label: "Data Orang Tua", icon: Users },
+  { id: "documents", label: "Dokumen", icon: FileText },
   { id: "school", label: "Data Sekolah", icon: GraduationCap },
 ] as const;
 
@@ -199,7 +203,7 @@ export function RegistrationFormCard() {
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <Tabs value={activeStep} className="w-full">
               {/* Step Navigation */}
-              <TabsList className="w-full h-auto p-2 bg-secondary/50 backdrop-blur-sm rounded-xl mb-8 grid grid-cols-3 gap-2">
+              <TabsList className="w-full h-auto p-2 bg-secondary/50 backdrop-blur-sm rounded-xl mb-8 grid grid-cols-4 gap-2">
                 {STEPS.map((step, index) => {
                   const Icon = step.icon;
                   const isActive = activeStep === step.id;
@@ -241,6 +245,10 @@ export function RegistrationFormCard() {
                 
                 <TabsContent value="parent" className="step-content mt-0">
                   <ParentDataForm form={form} />
+                </TabsContent>
+                
+                <TabsContent value="documents" className="step-content mt-0">
+                  <DocumentUploadForm form={form} />
                 </TabsContent>
                 
                 <TabsContent value="school" className="step-content mt-0">
