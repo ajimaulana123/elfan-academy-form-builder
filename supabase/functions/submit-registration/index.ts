@@ -62,7 +62,6 @@ Deno.serve(async (req) => {
     const { data, error } = await supabase
       .from("registrations")
       .insert({
-        user_id: userId,
         nama_lengkap: body.namaLengkap,
         tempat_lahir: body.tempatLahir,
         tanggal_lahir: body.tanggalLahir,
