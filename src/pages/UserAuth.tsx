@@ -54,6 +54,7 @@ const UserAuth = () => {
           toast({ title: "Login Gagal", description: message, variant: "destructive" });
         } else {
           toast({ title: "Login Berhasil! 🎉", description: "Selamat datang!" });
+          navigate("/", { replace: true });
         }
       } else {
         const { error } = await signUp(email, password);
