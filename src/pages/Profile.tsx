@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
 import { Link, useNavigate } from "react-router-dom";
-import { Loader2, LogOut, FileText, Plus, ArrowLeft, Upload, Eye, Calendar, User as UserIcon, ChevronDown, ChevronUp } from "lucide-react";
+import { Loader2, LogOut, FileText, Plus, ArrowLeft, Upload, Eye, Calendar, User as UserIcon, ChevronDown, ChevronUp, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { FileUploadField } from "@/components/forms/FileUploadField";
 import { DocumentViewer } from "@/components/admin/DocumentViewer";
@@ -151,6 +151,9 @@ const Profile = () => {
   const getDocCount = (reg: Registration) =>
     DOCUMENT_FIELDS.filter((d) => reg[d.key]).length;
 
+  const getMissingDocs = (reg: Registration) =>
+    DOCUMENT_FIELDS.filter((d) => !reg[d.key]).map((d) => d.label);
+
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString("id-ID", {
       day: "numeric",
@@ -184,17 +187,9 @@ const Profile = () => {
       </header>
 
       <main className="container px-4 py-8 max-w-4xl">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-2xl font-bold">Riwayat Pendaftaran</h1>
-            <p className="text-muted-foreground mt-1">Lihat dan kelola dokumen pendaftaran Anda</p>
-          </div>
-          <Link to="/">
-            <Button variant="hero" className="gap-2">
-              <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline">Daftar Baru</span>
-            </Button>
-          </Link>
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold">Riwayat Pendaftaran</h1>
+          <p className="text-muted-foreground mt-1">Lihat dan kelola dokumen pendaftaran Anda</p>
         </div>
 
         {loading ? (
@@ -236,11 +231,36 @@ const Profile = () => {
                           <Calendar className="h-3.5 w-3.5" />
                           {formatDate(reg.created_at)}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <FileText className="h-3.5 w-3.5" />
-                          {getDocCount(reg)}/5 dokumen
-                        </span>
+                        {getDocCount(reg) < 5 ? (
+                          <span className="flex items-center gap-1 text-amber-500">
+                            <AlertTriangle className="h-3.5 w-3.5" />
+                            {getDocCount(reg)}/5 dokumen — belum lengkap
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-1 text-[hsl(var(--success))]">
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                            5/5 dokumen lengkap
+                          </span>
+                        )}
                       </div>
+
+                      {/* Missing documents warning */}
+                      {getDocCount(reg) < 5 && (
+                        <div className="mt-3 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-sm">
+                          <div className="flex items-start gap-2">
+                            <AlertTriangle className="h-4 w-4 text-amber-500 mt-0.5 shrink-0" />
+                            <div>
+                              <p className="font-medium text-amber-600 dark:text-amber-400">Dokumen belum lengkap!</p>
+                              <p className="text-muted-foreground mt-1">
+                                Dokumen yang belum diunggah:{" "}
+                                <span className="font-medium text-foreground">
+                                  {getMissingDocs(reg).join(", ")}
+                                </span>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex items-center gap-2">

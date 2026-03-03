@@ -45,6 +45,7 @@ export type Database = {
           tanggal_lahir: string
           tempat_lahir: string
           tinggi_badan: string
+          user_id: string | null
         }
         Insert: {
           akta_url?: string | null
@@ -76,6 +77,7 @@ export type Database = {
           tanggal_lahir: string
           tempat_lahir: string
           tinggi_badan: string
+          user_id?: string | null
         }
         Update: {
           akta_url?: string | null
@@ -107,6 +109,7 @@ export type Database = {
           tanggal_lahir?: string
           tempat_lahir?: string
           tinggi_badan?: string
+          user_id?: string | null
         }
         Relationships: []
       }
