@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
 import { Link, useNavigate } from "react-router-dom";
-import { Loader2, LogOut, FileText, Plus, ArrowLeft, Upload, Eye, Calendar, User as UserIcon } from "lucide-react";
+import { Loader2, LogOut, FileText, Plus, ArrowLeft, Upload, Eye, Calendar, User as UserIcon, ChevronDown, ChevronUp } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { FileUploadField } from "@/components/forms/FileUploadField";
 import { DocumentViewer } from "@/components/admin/DocumentViewer";
@@ -13,9 +13,27 @@ import { DocumentViewer } from "@/components/admin/DocumentViewer";
 interface Registration {
   id: string;
   nama_lengkap: string;
-  email: string;
+  tempat_lahir: string;
+  tanggal_lahir: string;
   jenis_kelamin: string;
+  tinggi_badan: string;
+  berat_badan: string;
+  nomor_ktp: string;
+  alamat_lengkap: string;
+  email: string;
+  no_telpon: string;
+  instagram: string | null;
+  nama_ayah: string;
+  alamat_ayah: string;
+  pekerjaan_ayah: string;
+  no_telpon_ayah: string;
+  nama_ibu: string;
+  alamat_ibu: string;
+  pekerjaan_ibu: string;
+  no_telpon_ibu: string;
   asal_sekolah: string;
+  jurusan: string;
+  alamat_sekolah: string;
   created_at: string;
   akta_url: string | null;
   kk_url: string | null;
@@ -32,11 +50,21 @@ const DOCUMENT_FIELDS = [
   { key: "bukti_transfer_url", label: "Bukti Transfer", fieldName: "buktiTransfer" },
 ] as const;
 
+function DetailItem({ label, value, className }: { label: string; value: string; className?: string }) {
+  return (
+    <div className={className}>
+      <span className="text-muted-foreground">{label}</span>
+      <p className="font-medium mt-0.5">{value}</p>
+    </div>
+  );
+}
+
 const Profile = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedReg, setExpandedReg] = useState<string | null>(null);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [docViewerOpen, setDocViewerOpen] = useState(false);
   const [selectedReg, setSelectedReg] = useState<Registration | null>(null);
@@ -47,7 +75,7 @@ const Profile = () => {
     try {
       const { data, error } = await supabase
         .from("registrations")
-        .select("id, nama_lengkap, email, jenis_kelamin, asal_sekolah, created_at, akta_url, kk_url, ktp_url, ijazah_url, bukti_transfer_url")
+        .select("*")
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -217,13 +245,22 @@ const Profile = () => {
 
                     <div className="flex items-center gap-2">
                       <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setExpandedReg(expandedReg === reg.id ? null : reg.id)}
+                        className="gap-2"
+                      >
+                        {expandedReg === reg.id ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                        Detail
+                      </Button>
+                      <Button
                         variant="outline"
                         size="sm"
                         onClick={() => openDocViewer(reg)}
                         className="gap-2"
                       >
                         <Eye className="h-4 w-4" />
-                        Lihat
+                        Dokumen
                       </Button>
                       <Button
                         variant="hero"
@@ -232,10 +269,58 @@ const Profile = () => {
                         className="gap-2"
                       >
                         <Upload className="h-4 w-4" />
-                        Unggah Dokumen
+                        Unggah
                       </Button>
                     </div>
                   </div>
+
+                  {/* Expandable Detail Section */}
+                  {expandedReg === reg.id && (
+                    <div className="mt-6 pt-6 border-t border-border/30 space-y-6">
+                      {/* Data Pribadi */}
+                      <div>
+                        <h4 className="text-sm font-semibold text-primary mb-3">Data Pribadi</h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                          <DetailItem label="Nama Lengkap" value={reg.nama_lengkap} />
+                          <DetailItem label="Email" value={reg.email} />
+                          <DetailItem label="Tempat Lahir" value={reg.tempat_lahir} />
+                          <DetailItem label="Tanggal Lahir" value={reg.tanggal_lahir} />
+                          <DetailItem label="Jenis Kelamin" value={reg.jenis_kelamin} />
+                          <DetailItem label="No. Telepon" value={reg.no_telpon} />
+                          <DetailItem label="Tinggi Badan" value={`${reg.tinggi_badan} cm`} />
+                          <DetailItem label="Berat Badan" value={`${reg.berat_badan} kg`} />
+                          <DetailItem label="Nomor KTP" value={reg.nomor_ktp} />
+                          {reg.instagram && <DetailItem label="Instagram" value={reg.instagram} />}
+                          <DetailItem label="Alamat" value={reg.alamat_lengkap} className="sm:col-span-2" />
+                        </div>
+                      </div>
+
+                      {/* Data Orang Tua */}
+                      <div>
+                        <h4 className="text-sm font-semibold text-primary mb-3">Data Orang Tua</h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                          <DetailItem label="Nama Ayah" value={reg.nama_ayah} />
+                          <DetailItem label="Pekerjaan Ayah" value={reg.pekerjaan_ayah} />
+                          <DetailItem label="No. Telpon Ayah" value={reg.no_telpon_ayah} />
+                          <DetailItem label="Alamat Ayah" value={reg.alamat_ayah} />
+                          <DetailItem label="Nama Ibu" value={reg.nama_ibu} />
+                          <DetailItem label="Pekerjaan Ibu" value={reg.pekerjaan_ibu} />
+                          <DetailItem label="No. Telpon Ibu" value={reg.no_telpon_ibu} />
+                          <DetailItem label="Alamat Ibu" value={reg.alamat_ibu} />
+                        </div>
+                      </div>
+
+                      {/* Data Sekolah */}
+                      <div>
+                        <h4 className="text-sm font-semibold text-primary mb-3">Data Sekolah</h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                          <DetailItem label="Asal Sekolah" value={reg.asal_sekolah} />
+                          <DetailItem label="Jurusan" value={reg.jurusan} />
+                          <DetailItem label="Alamat Sekolah" value={reg.alamat_sekolah} className="sm:col-span-2" />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             ))}
