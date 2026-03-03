@@ -33,10 +33,17 @@ Deno.serve(async (req) => {
       userId = data?.user?.id || null;
     }
 
+    if (!userId) {
+      return new Response(
+        JSON.stringify({ error: "Anda harus login terlebih dahulu" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const body = await req.json();
     console.log("Received registration data for:", body.namaLengkap);
 
-    // Validate required fields (documents are now optional)
+    // Validate required fields
     const requiredFields = [
       "namaLengkap", "tempatLahir", "tanggalLahir", "jenisKelamin",
       "tinggiBadan", "beratBadan", "nomorKTP", "alamatLengkap",
@@ -59,9 +66,24 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
+    // Check if user already has a registration
+    const { data: existing } = await supabase
+      .from("registrations")
+      .select("id")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (existing) {
+      return new Response(
+        JSON.stringify({ error: "Anda sudah pernah mendaftar. Setiap akun hanya boleh mendaftar satu kali." }),
+        { status: 409, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const { data, error } = await supabase
       .from("registrations")
       .insert({
+        user_id: userId,
         nama_lengkap: body.namaLengkap,
         tempat_lahir: body.tempatLahir,
         tanggal_lahir: body.tanggalLahir,

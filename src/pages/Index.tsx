@@ -1,13 +1,29 @@
 import { Button } from "@/components/ui/button";
-import { Sparkles, Calendar, ArrowDown, User, LogOut } from "lucide-react";
+import { Sparkles, Calendar, ArrowDown, User, LogOut, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { FloatingBadges } from "@/components/FloatingBadges";
 import { RegistrationFormCard } from "@/components/RegistrationFormCard";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 
 const Index = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const [alreadyRegistered, setAlreadyRegistered] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkRegistration = async () => {
+      if (!user) return;
+      const { data } = await supabase
+        .from("registrations")
+        .select("id")
+        .limit(1);
+      setAlreadyRegistered(!!data && data.length > 0);
+    };
+    checkRegistration();
+  }, [user]);
 
   const scrollToForm = () => {
     const formElement = document.getElementById('registration-form');
@@ -69,12 +85,14 @@ const Index = () => {
               </span>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-10">
-              <Button onClick={scrollToForm} className="btn-gradient min-w-[180px]">
-                Daftar Sekarang
-                <ArrowDown className="w-4 h-4 ml-2" />
-              </Button>
-            </div>
+            {alreadyRegistered === false && (
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-10">
+                <Button onClick={scrollToForm} className="btn-gradient min-w-[180px]">
+                  Daftar Sekarang
+                  <ArrowDown className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </header>
@@ -82,7 +100,25 @@ const Index = () => {
       {/* Main Content */}
       <main className="relative pb-24">
         <div className="container px-4">
-          <RegistrationFormCard />
+          {alreadyRegistered === true ? (
+            <Card className="glass-card max-w-2xl mx-auto text-center py-12">
+              <CardContent className="space-y-4">
+                <CheckCircle2 className="h-16 w-16 text-[hsl(var(--success))] mx-auto" />
+                <h2 className="text-2xl font-bold">Anda Sudah Terdaftar!</h2>
+                <p className="text-muted-foreground max-w-md mx-auto">
+                  Akun Anda sudah memiliki pendaftaran. Setiap akun hanya diperbolehkan mendaftar satu kali. Anda bisa mengelola dokumen dari halaman profil.
+                </p>
+                <Link to="/profile">
+                  <Button variant="hero" className="gap-2 mt-4">
+                    <User className="h-4 w-4" />
+                    Lihat Profil & Dokumen
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          ) : alreadyRegistered === false ? (
+            <RegistrationFormCard />
+          ) : null}
         </div>
       </main>
 
