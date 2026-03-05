@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext, ReactNode } from "react";
+import { useState, useEffect, createContext, useContext, useRef, ReactNode } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -17,27 +17,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const currentUserIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    let initialized = false;
-
-    // Check for existing session FIRST
+    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!initialized) {
-        initialized = true;
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
+      currentUserIdRef.current = session?.user?.id ?? null;
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
     });
 
-    // THEN set up auth state listener for future changes
+    // Listen for auth changes (sign in, sign out only - ignore token refreshes)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        if (!initialized) {
-          initialized = true;
+      (event, session) => {
+        // Only update state for meaningful auth changes
+        const newUserId = session?.user?.id ?? null;
+        if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
+          currentUserIdRef.current = newUserId;
+          setSession(session);
+          setUser(session?.user ?? null);
+          setLoading(false);
+        } else if (event === 'TOKEN_REFRESHED') {
+          // Update session silently without triggering unnecessary re-renders
+          // unless user actually changed
+          if (newUserId !== currentUserIdRef.current) {
+            currentUserIdRef.current = newUserId;
+            setSession(session);
+            setUser(session?.user ?? null);
+          }
+        } else if (event === 'INITIAL_SESSION') {
+          currentUserIdRef.current = newUserId;
+          setSession(session);
+          setUser(session?.user ?? null);
           setLoading(false);
         }
       }
