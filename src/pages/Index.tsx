@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Sparkles, Calendar, ArrowDown, User, LogOut, CheckCircle2 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { FloatingBadges } from "@/components/FloatingBadges";
 import { RegistrationFormCard } from "@/components/RegistrationFormCard";
