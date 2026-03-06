@@ -78,28 +78,35 @@ const UserAuth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden flex items-center justify-center p-4">
+    <div
+      className="min-h-screen relative overflow-hidden flex items-center justify-center p-4"
+      style={{ backgroundImage: 'url(/hero-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+    >
+      <div className="hero-overlay" />
       <div className="absolute top-4 right-4 z-10">
         <ThemeToggle />
       </div>
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: `
-            radial-gradient(ellipse 80% 50% at 50% -20%, hsl(262 83% 58% / 0.15), transparent),
-            radial-gradient(ellipse 60% 40% at 80% 50%, hsl(220 90% 56% / 0.1), transparent),
-            radial-gradient(ellipse 60% 40% at 20% 80%, hsl(262 83% 58% / 0.08), transparent)
-          `,
-        }}
-      />
 
-      <div className="w-full max-w-md relative">
-        <Card className="glass-card card-animated">
+      <div className="w-full max-w-md relative z-10">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-3">
+            <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold">
+              EA
+            </div>
+            <div className="text-left">
+              <span className="text-lg font-bold text-white block">Elfan</span>
+              <span className="text-sm text-white/70">AI Academy</span>
+            </div>
+          </div>
+        </div>
+
+        <Card className="bg-card/90 backdrop-blur-xl border border-border/50 shadow-2xl">
           <CardHeader className="text-center pb-2 pt-8">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 border border-primary/20">
               <GraduationCap className="h-7 w-7 text-primary" />
             </div>
-            <CardTitle className="text-2xl font-bold gradient-text">
+            <CardTitle className="text-2xl font-bold">
               {isLogin ? "Masuk" : "Buat Akun"}
             </CardTitle>
             <CardDescription className="mt-2">
@@ -138,12 +145,10 @@ const UserAuth = () => {
                 />
               </div>
 
-              <Button
+              <button
                 type="submit"
-                variant="hero"
-                size="xl"
-                className="w-full"
                 disabled={loading}
+                className="btn-gold w-full flex items-center justify-center gap-2 !py-3"
               >
                 {loading ? (
                   <>
@@ -156,7 +161,7 @@ const UserAuth = () => {
                     <span>{isLogin ? "Masuk" : "Daftar"}</span>
                   </>
                 )}
-              </Button>
+              </button>
             </form>
 
             <div className="mt-6 text-center">
