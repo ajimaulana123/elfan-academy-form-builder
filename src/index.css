@@ -137,7 +137,7 @@
   }
   
   .gradient-text {
-    @apply bg-gradient-to-r from-[hsl(var(--violet))] via-[hsl(var(--blue))] to-[hsl(var(--pink))] bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-[hsl(var(--blue))] via-[hsl(var(--cyan))] to-[hsl(var(--pink))] bg-clip-text text-transparent;
   }
   
   .glow-effect {
