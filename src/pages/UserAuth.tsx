@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
-import { Loader2, LogIn, UserPlus, GraduationCap, ArrowLeft } from "lucide-react";
+import { Loader2, LogIn, UserPlus, GraduationCap } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { z } from "zod";
 
 const authSchema = z.object({
