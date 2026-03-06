@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Sparkles, Calendar, ArrowDown, User, LogOut, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Sparkles, Calendar, ArrowDown, User, LogOut, CheckCircle2 } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { FloatingBadges } from "@/components/FloatingBadges";
 import { RegistrationFormCard } from "@/components/RegistrationFormCard";
 import { Link, useNavigate } from "react-router-dom";
@@ -44,6 +45,7 @@ const Index = () => {
         <div className="container flex items-center justify-between h-14 px-4">
           <span className="text-sm font-semibold gradient-text">Elfan AI Academy</span>
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Link to="/profile">
               <Button variant="ghost" size="sm" className="gap-2">
                 <User className="h-4 w-4" />

@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
-import { Loader2, LogIn, UserPlus, GraduationCap, ArrowLeft } from "lucide-react";
+import { Loader2, LogIn, UserPlus, GraduationCap } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { z } from "zod";
 
 const authSchema = z.object({
@@ -78,6 +79,9 @@ const UserAuth = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden flex items-center justify-center p-4">
+      <div className="absolute top-4 right-4 z-10">
+        <ThemeToggle />
+      </div>
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
