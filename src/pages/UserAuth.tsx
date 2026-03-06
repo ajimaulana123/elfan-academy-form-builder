@@ -79,6 +79,9 @@ const UserAuth = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden flex items-center justify-center p-4">
+      <div className="absolute top-4 right-4 z-10">
+        <ThemeToggle />
+      </div>
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
