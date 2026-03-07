@@ -1,16 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { 
-  Sparkles, Calendar, ArrowDown, User, LogOut, CheckCircle2, 
+  Sparkles, Calendar, User, CheckCircle2, 
   BookOpen, Cpu, GraduationCap, Building2, Monitor, Library,
-  Server, UtensilsCrossed, Dumbbell, ChevronDown, Eye, Target
+  Server, UtensilsCrossed, Dumbbell, ChevronDown, Eye, Target,
+  ChevronLeft, ChevronRight
 } from "lucide-react";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { RegistrationFormCard } from "@/components/RegistrationFormCard";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 
 const stats = [
   { value: 200, suffix: "+", label: "Santri Aktif" },
@@ -39,6 +41,25 @@ const programs = [
   { icon: BookOpen, title: "Tahfidz Al-Quran", desc: "Program hafalan Al-Quran 30 juz dengan metode modern dan bimbingan intensif dari para hafidz.", duration: "3 Tahun" },
   { icon: Cpu, title: "AI & Technology", desc: "Pembelajaran teknologi kecerdasan buatan, coding, dan digital literacy untuk era modern.", duration: "2 Tahun" },
   { icon: GraduationCap, title: "Program Reguler", desc: "Kurikulum nasional plus dengan pendalaman ilmu agama dan bahasa Arab.", duration: "3 Tahun" },
+];
+
+const heroSlides = [
+  {
+    bg: "/hero-bg.jpg",
+    badge: "Tahun Ajaran 2025/2026",
+    title: "Pendidikan Islam",
+    highlight: "Modern",
+    subtitle: "Menggabungkan Nilai-Nilai Islami dengan Teknologi AI",
+    desc: "Membentuk generasi yang berakhlak mulia, cerdas, dan siap menghadapi tantangan masa depan.",
+  },
+  {
+    bg: "/hero-bg-2.jpg",
+    badge: "Pendaftaran Dibuka",
+    title: "Generasi Unggul",
+    highlight: "Berteknologi",
+    subtitle: "Kurikulum Berbasis AI untuk Masa Depan Cemerlang",
+    desc: "Mencetak lulusan yang mandiri, inovatif, dan mampu bersaing di era digital global.",
+  },
 ];
 
 function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
@@ -72,9 +93,11 @@ function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
 }
 
 const Index = () => {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [alreadyRegistered, setAlreadyRegistered] = useState<boolean | null>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const slideInterval = useRef<ReturnType<typeof setInterval>>();
 
   useEffect(() => {
     const checkRegistration = async () => {
@@ -92,121 +115,112 @@ const Index = () => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleLogout = async () => {
-    await signOut();
-    navigate("/login");
+  // Auto-slide
+  const startAutoSlide = useCallback(() => {
+    slideInterval.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 6000);
+  }, []);
+
+  useEffect(() => {
+    startAutoSlide();
+    return () => clearInterval(slideInterval.current);
+  }, [startAutoSlide]);
+
+  const goToSlide = (index: number) => {
+    clearInterval(slideInterval.current);
+    setCurrentSlide(index);
+    startAutoSlide();
   };
 
-  const navLinks = [
-    { label: "Beranda", id: "hero" },
-    { label: "Visi Misi", id: "visi-misi" },
-    { label: "Program", id: "program" },
-    { label: "Fasilitas", id: "fasilitas" },
-    { label: "Daftar", id: "registration-form" },
-  ];
+  const prevSlide = () => goToSlide((currentSlide - 1 + heroSlides.length) % heroSlides.length);
+  const nextSlide = () => goToSlide((currentSlide + 1) % heroSlides.length);
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30">
-        <div className="container flex items-center justify-between h-16 px-4">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
-              EA
-            </div>
-            <div className="leading-tight">
-              <span className="text-sm font-bold text-foreground block">Elfan</span>
-              <span className="text-xs text-muted-foreground">AI Academy</span>
-            </div>
-          </div>
+      <Navbar />
 
-          <div className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <button
-                key={link.id}
-                onClick={() => scrollToSection(link.id)}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium"
-              >
-                {link.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            {user ? (
-              <>
-                <Link to="/profile">
-                  <Button variant="ghost" size="sm" className="gap-2">
-                    <User className="h-4 w-4" />
-                    <span className="hidden sm:inline">Profil</span>
-                  </Button>
-                </Link>
-                <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2 text-muted-foreground">
-                  <LogOut className="h-4 w-4" />
-                  <span className="hidden sm:inline">Keluar</span>
-                </Button>
-              </>
-            ) : (
-              <Link to="/login">
-                <Button variant="ghost" size="sm" className="gap-2">
-                  <User className="h-4 w-4" />
-                  <span className="hidden sm:inline">Masuk</span>
-                </Button>
-              </Link>
-            )}
-            <button
-              onClick={() => scrollToSection('registration-form')}
-              className="btn-gold text-sm hidden sm:inline-flex items-center gap-2 !px-5 !py-2"
+      {/* Hero Slider */}
+      <section id="hero" className="relative min-h-screen">
+        {heroSlides.map((slide, i) => (
+          <div
+            key={i}
+            className={`absolute inset-0 transition-opacity duration-1000 ${
+              i === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
+            }`}
+          >
+            <div
+              className="hero-section"
+              style={{ backgroundImage: `url(${slide.bg})` }}
             >
-              Daftar Sekarang
-            </button>
-          </div>
-        </div>
-      </nav>
+              <div className="hero-overlay" />
+              <div className="container relative z-10 px-4">
+                <div className="max-w-2xl">
+                  <div className={i === currentSlide ? "animate-fade-up" : ""}>
+                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-sm font-medium text-white/90 backdrop-blur-sm mb-6">
+                      <Sparkles className="h-4 w-4 text-accent" />
+                      {slide.badge}
+                    </span>
+                  </div>
 
-      {/* Hero Section - Full Screen */}
-      <section
-        id="hero"
-        className="hero-section"
-        style={{ backgroundImage: 'url(/hero-bg.jpg)' }}
-      >
-        <div className="hero-overlay" />
-        <div className="container relative z-10 px-4">
-          <div className="max-w-2xl">
-            <div className="animate-fade-up">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-sm font-medium text-white/90 backdrop-blur-sm mb-6">
-                <Sparkles className="h-4 w-4 text-accent" />
-                Tahun Ajaran 2025/2026
-              </span>
-            </div>
+                  <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4 ${i === currentSlide ? "animate-fade-up-delay-1" : ""}`}>
+                    {slide.title}{" "}
+                    <span className="gradient-text-gold">{slide.highlight}</span>
+                  </h1>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4 animate-fade-up-delay-1">
-              Pendidikan Islam{" "}
-              <span className="gradient-text-gold">Modern</span>
-            </h1>
+                  <p className={`text-lg md:text-xl text-accent font-medium mb-4 ${i === currentSlide ? "animate-fade-up-delay-1" : ""}`}>
+                    {slide.subtitle}
+                  </p>
 
-            <p className="text-lg md:text-xl text-accent font-medium mb-4 animate-fade-up-delay-1">
-              Menggabungkan Nilai-Nilai Islami dengan Teknologi AI
-            </p>
+                  <p className={`text-base text-white/70 max-w-xl mb-8 ${i === currentSlide ? "animate-fade-up-delay-2" : ""}`}>
+                    {slide.desc}
+                  </p>
 
-            <p className="text-base text-white/70 max-w-xl mb-8 animate-fade-up-delay-2">
-              Membentuk generasi yang berakhlak mulia, cerdas, dan siap menghadapi tantangan masa depan.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-start gap-4 animate-fade-up-delay-3">
-              <button onClick={() => scrollToSection('registration-form')} className="btn-gold">
-                Daftar Sekarang
-              </button>
-              <button onClick={() => scrollToSection('visi-misi')} className="btn-outline-light">
-                Pelajari Lebih Lanjut
-              </button>
+                  <div className={`flex flex-col sm:flex-row items-start gap-4 ${i === currentSlide ? "animate-fade-up-delay-3" : ""}`}>
+                    <button onClick={() => scrollToSection('registration-form')} className="btn-gold">
+                      Daftar Sekarang
+                    </button>
+                    <button onClick={() => scrollToSection('visi-misi')} className="btn-outline-light">
+                      Pelajari Lebih Lanjut
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+        ))}
+
+        {/* Slider Controls */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+
+        {/* Dots */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+          {heroSlides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goToSlide(i)}
+              className={`rounded-full transition-all duration-300 ${
+                i === currentSlide
+                  ? "w-8 h-3 bg-white"
+                  : "w-3 h-3 bg-white/40 hover:bg-white/60"
+              }`}
+            />
+          ))}
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 right-8 z-10 hidden md:flex flex-col items-center gap-2 text-white/50">
+        <div className="absolute bottom-8 right-8 z-20 hidden md:flex flex-col items-center gap-2 text-white/50">
           <span className="text-xs tracking-widest uppercase" style={{ writingMode: 'vertical-rl' }}>SCROLL</span>
           <ChevronDown className="w-4 h-4 animate-bounce" />
         </div>
@@ -391,18 +405,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative py-10 border-t border-border/30 bg-card/50">
-        <div className="container px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-xs">EA</div>
-              <span className="text-sm font-semibold">Elfan AI Academy</span>
-            </div>
-            <span className="text-sm text-muted-foreground">© 2026 Elfan AI Academy. All Rights Reserved.</span>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
