@@ -134,16 +134,27 @@ const Index = () => {
 
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            <Link to="/profile">
-              <Button variant="ghost" size="sm" className="gap-2">
-                <User className="h-4 w-4" />
-                <span className="hidden sm:inline">Profil</span>
-              </Button>
-            </Link>
-            <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2 text-muted-foreground">
-              <LogOut className="h-4 w-4" />
-              <span className="hidden sm:inline">Keluar</span>
-            </Button>
+            {user ? (
+              <>
+                <Link to="/profile">
+                  <Button variant="ghost" size="sm" className="gap-2">
+                    <User className="h-4 w-4" />
+                    <span className="hidden sm:inline">Profil</span>
+                  </Button>
+                </Link>
+                <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2 text-muted-foreground">
+                  <LogOut className="h-4 w-4" />
+                  <span className="hidden sm:inline">Keluar</span>
+                </Button>
+              </>
+            ) : (
+              <Link to="/login">
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <User className="h-4 w-4" />
+                  <span className="hidden sm:inline">Masuk</span>
+                </Button>
+              </Link>
+            )}
             <button
               onClick={() => scrollToSection('registration-form')}
               className="btn-gold text-sm hidden sm:inline-flex items-center gap-2 !px-5 !py-2"
@@ -342,7 +353,23 @@ const Index = () => {
             </div>
           </div>
 
-          {alreadyRegistered === true ? (
+          {!user ? (
+            <Card className="glass-card max-w-2xl mx-auto text-center py-12">
+              <CardContent className="space-y-4">
+                <User className="h-16 w-16 text-primary/50 mx-auto" />
+                <h2 className="text-2xl font-bold">Silakan Login Terlebih Dahulu</h2>
+                <p className="text-muted-foreground max-w-md mx-auto">
+                  Anda perlu masuk atau membuat akun untuk melakukan pendaftaran.
+                </p>
+                <Link to="/login">
+                  <Button variant="hero" className="gap-2 mt-4">
+                    <User className="h-4 w-4" />
+                    Masuk / Daftar Akun
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          ) : alreadyRegistered === true ? (
             <Card className="glass-card max-w-2xl mx-auto text-center py-12">
               <CardContent className="space-y-4">
                 <CheckCircle2 className="h-16 w-16 text-[hsl(var(--success))] mx-auto" />
