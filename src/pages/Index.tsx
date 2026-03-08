@@ -3,7 +3,7 @@ import {
   Sparkles, Calendar, User, CheckCircle2, 
   BookOpen, Cpu, GraduationCap, Building2, Monitor, Library,
   Server, UtensilsCrossed, Dumbbell, ChevronDown, Eye, Target,
-  ChevronLeft, ChevronRight, ArrowRight, Star, Zap
+  ChevronLeft, ChevronRight, ArrowRight, Star, Zap, Quote, MessageCircle
 } from "lucide-react";
 import { RegistrationFormCard } from "@/components/RegistrationFormCard";
 import { Link, useNavigate } from "react-router-dom";
