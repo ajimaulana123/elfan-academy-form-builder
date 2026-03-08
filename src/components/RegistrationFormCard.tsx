@@ -203,39 +203,90 @@ export function RegistrationFormCard() {
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <Tabs value={activeStep} className="w-full">
               {/* Step Navigation */}
-              <TabsList className="w-full h-auto p-1.5 sm:p-2 bg-secondary/50 backdrop-blur-sm rounded-xl mb-8 grid grid-cols-4 gap-1 sm:gap-2">
-                {STEPS.map((step, index) => {
-                  const Icon = step.icon;
-                  const isActive = activeStep === step.id;
-                  const isCompleted = completedSteps.has(step.id);
-                  
-                  return (
-                    <TabsTrigger
-                      key={step.id}
-                      value={step.id}
-                      onClick={() => handleStepClick(step.id)}
-                      className={cn(
-                        "flex flex-col items-center gap-1 py-2 px-1 sm:px-3 sm:py-3 rounded-lg transition-all duration-300",
-                        "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg",
-                        "data-[state=inactive]:hover:bg-secondary/80",
-                        isCompleted && !isActive && "text-[hsl(var(--success))] border border-[hsl(var(--success)/0.3)]"
-                      )}
-                    >
-                      <div className={cn(
-                        "flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full transition-all duration-300",
-                        isActive ? "bg-primary-foreground/20" : isCompleted ? "bg-[hsl(var(--success)/0.2)]" : "bg-muted"
-                      )}>
-                        {isCompleted && !isActive ? (
-                          <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[hsl(var(--success))]" />
-                        ) : (
-                          <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              {/* Step Navigation - Mobile: horizontal stepper dots + label, Desktop: full tabs */}
+              <div className="mb-8">
+                {/* Mobile Step Navigation */}
+                <div className="sm:hidden">
+                  <div className="flex items-center justify-between mb-3">
+                    {STEPS.map((step, index) => {
+                      const isActive = activeStep === step.id;
+                      const isCompleted = completedSteps.has(step.id);
+                      const Icon = step.icon;
+                      return (
+                        <button
+                          key={step.id}
+                          type="button"
+                          onClick={() => handleStepClick(step.id)}
+                          className="flex flex-col items-center gap-1.5 flex-1"
+                        >
+                          <div className={cn(
+                            "w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 border-2",
+                            isActive 
+                              ? "bg-primary border-primary text-primary-foreground shadow-lg scale-110" 
+                              : isCompleted 
+                                ? "bg-[hsl(var(--success))] border-[hsl(var(--success))] text-white" 
+                                : "bg-muted border-border text-muted-foreground"
+                          )}>
+                            {isCompleted && !isActive ? (
+                              <CheckCircle2 className="h-4 w-4" />
+                            ) : (
+                              <Icon className="h-4 w-4" />
+                            )}
+                          </div>
+                          <span className={cn(
+                            "text-[10px] font-medium leading-tight text-center",
+                            isActive ? "text-primary" : isCompleted ? "text-[hsl(var(--success))]" : "text-muted-foreground"
+                          )}>
+                            {step.label}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {/* Progress line */}
+                  <div className="relative h-0.5 bg-muted rounded-full mx-6 -mt-[2.6rem] mb-10">
+                    <div 
+                      className="absolute h-full bg-primary rounded-full transition-all duration-500"
+                      style={{ width: `${(currentStepIndex / (STEPS.length - 1)) * 100}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Desktop Step Navigation */}
+                <TabsList className="hidden sm:grid w-full h-auto p-2 bg-secondary/50 backdrop-blur-sm rounded-xl grid-cols-4 gap-2">
+                  {STEPS.map((step, index) => {
+                    const Icon = step.icon;
+                    const isActive = activeStep === step.id;
+                    const isCompleted = completedSteps.has(step.id);
+                    
+                    return (
+                      <TabsTrigger
+                        key={step.id}
+                        value={step.id}
+                        onClick={() => handleStepClick(step.id)}
+                        className={cn(
+                          "flex items-center gap-2 py-3 px-4 rounded-lg transition-all duration-300",
+                          "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg",
+                          "data-[state=inactive]:hover:bg-secondary/80",
+                          isCompleted && !isActive && "text-[hsl(var(--success))] border border-[hsl(var(--success)/0.3)]"
                         )}
-                      </div>
-                      <span className="text-[10px] sm:text-xs font-medium text-center leading-tight">{step.label}</span>
-                    </TabsTrigger>
-                  );
-                })}
-              </TabsList>
+                      >
+                        <div className={cn(
+                          "flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300",
+                          isActive ? "bg-primary-foreground/20" : isCompleted ? "bg-[hsl(var(--success)/0.2)]" : "bg-muted"
+                        )}>
+                          {isCompleted && !isActive ? (
+                            <CheckCircle2 className="h-4 w-4 text-[hsl(var(--success))]" />
+                          ) : (
+                            <Icon className="h-4 w-4" />
+                          )}
+                        </div>
+                        <span className="text-sm font-medium">{step.label}</span>
+                      </TabsTrigger>
+                    );
+                  })}
+                </TabsList>
+              </div>
               
               {/* Step Content */}
               <div className="step-content-wrapper">
