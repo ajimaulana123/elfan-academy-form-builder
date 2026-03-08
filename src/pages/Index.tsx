@@ -165,6 +165,16 @@ const Index = () => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Build hero slides: if dynamic hero exists, replace first slide's bg
+  const heroSlides = dynamicHero
+    ? defaultHeroSlides.map((s, i) => i === 0 ? { ...s, bg: dynamicHero.image_url } : s)
+    : defaultHeroSlides;
+
+  // Merge gallery: use dynamic if available, fallback to static
+  const finalGallery = dynamicGallery.length > 0
+    ? dynamicGallery.map(g => ({ src: g.image_url, label: g.caption || "", category: "" }))
+    : galleryItems;
+
   const startAutoSlide = useCallback(() => {
     slideInterval.current = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
