@@ -3,7 +3,7 @@ import {
   Sparkles, Calendar, User, CheckCircle2, 
   BookOpen, Cpu, GraduationCap, Building2, Monitor, Library,
   Server, UtensilsCrossed, Dumbbell, ChevronDown, Eye, Target,
-  ChevronLeft, ChevronRight, ArrowRight, Star, Zap, Quote, MessageCircle
+  ChevronLeft, ChevronRight, ArrowRight, Star, Zap, Quote, MessageCircle, Camera
 } from "lucide-react";
 import { RegistrationFormCard } from "@/components/RegistrationFormCard";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,6 +13,21 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import gallery1 from "@/assets/gallery-1.jpg";
+import gallery2 from "@/assets/gallery-2.jpg";
+import gallery3 from "@/assets/gallery-3.jpg";
+import gallery4 from "@/assets/gallery-4.jpg";
+import gallery5 from "@/assets/gallery-5.jpg";
+import gallery6 from "@/assets/gallery-6.jpg";
+
+const galleryItems = [
+  { src: gallery1, label: "Kegiatan Belajar", category: "Akademik" },
+  { src: gallery2, label: "Tahfidz Al-Quran", category: "Ibadah" },
+  { src: gallery3, label: "Lab Komputer & AI", category: "Teknologi" },
+  { src: gallery4, label: "Kegiatan Olahraga", category: "Ekstrakurikuler" },
+  { src: gallery5, label: "Wisuda Santri", category: "Prestasi" },
+  { src: gallery6, label: "Makan Bersama", category: "Kehidupan Santri" },
+];
 
 const stats = [
   { value: 200, suffix: "+", label: "Santri Aktif", icon: User },
@@ -486,6 +501,50 @@ const Index = () => {
                   </div>
                 </CardContent>
               </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Gallery Section */}
+      <section id="gallery" className="py-24 md:py-32 relative">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.03),transparent_60%)]" />
+        <div className="container px-4 relative">
+          <div className="text-center mb-16">
+            <span className="section-badge mb-4 inline-flex">
+              <Camera className="w-3.5 h-3.5" />
+              Gallery
+            </span>
+            <h2 className="text-3xl md:text-5xl font-black mt-4">
+              Kegiatan <span className="gradient-text">Santri</span>
+            </h2>
+            <p className="text-muted-foreground mt-4 max-w-2xl mx-auto text-lg">
+              Momen-momen berharga dari kehidupan sehari-hari santri Elfan AI Academy.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+            {galleryItems.map((item, i) => (
+              <div
+                key={i}
+                className={`group relative overflow-hidden rounded-2xl cursor-pointer ${
+                  i === 0 ? "md:row-span-2" : ""
+                }`}
+              >
+                <img
+                  src={item.src}
+                  alt={item.label}
+                  className={`w-full object-cover transition-all duration-700 group-hover:scale-110 ${
+                    i === 0 ? "h-full min-h-[280px] md:min-h-full" : "h-48 md:h-56"
+                  }`}
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                  <span className="text-xs font-semibold text-accent bg-accent/20 backdrop-blur-sm px-2.5 py-1 rounded-full">{item.category}</span>
+                  <p className="text-white font-bold mt-2 text-sm">{item.label}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
