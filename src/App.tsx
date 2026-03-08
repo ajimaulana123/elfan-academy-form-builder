@@ -11,7 +11,7 @@ import Index from "./pages/Index";
 import UserAuth from "./pages/UserAuth";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
-import AdminLogin from "./pages/AdminLogin";
+
 import Profile from "./pages/Profile";
 import ProfileAcademy from "./pages/ProfileAcademy";
 import Sejarah from "./pages/Sejarah";
