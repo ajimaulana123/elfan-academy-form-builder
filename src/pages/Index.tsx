@@ -130,8 +130,24 @@ const Index = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideInterval = useRef<ReturnType<typeof setInterval>>();
 
+  // Dynamic content
+  const [dynamicHero, setDynamicHero] = useState<{ image_url: string; title: string | null } | null>(null);
+  const [dynamicGallery, setDynamicGallery] = useState<{ id: string; image_url: string; caption: string | null }[]>([]);
+  const [dynamicTestimonials, setDynamicTestimonials] = useState<{ id: string; name: string; role: string; quote: string; photo_url: string | null }[]>([]);
 
-
+  useEffect(() => {
+    const fetchDynamic = async () => {
+      const [heroRes, galleryRes, testiRes] = await Promise.all([
+        supabase.from("hero_images").select("*").eq("is_active", true).limit(1).maybeSingle(),
+        supabase.from("gallery_photos").select("*").order("sort_order"),
+        supabase.from("testimonials").select("*").eq("is_active", true).order("created_at", { ascending: false }),
+      ]);
+      if (heroRes.data) setDynamicHero(heroRes.data);
+      if (galleryRes.data?.length) setDynamicGallery(galleryRes.data);
+      if (testiRes.data?.length) setDynamicTestimonials(testiRes.data);
+    };
+    fetchDynamic();
+  }, []);
 
   useEffect(() => {
     const checkRegistration = async () => {
