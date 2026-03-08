@@ -248,7 +248,7 @@ const Index = () => {
         </button>
 
         {/* Dots & progress */}
-        <div className="absolute bottom-28 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+        <div className="absolute bottom-44 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
           {heroSlides.map((_, i) => (
             <button
               key={i}
@@ -261,14 +261,14 @@ const Index = () => {
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-6 right-8 z-20 hidden md:flex flex-col items-center gap-2 text-white/40">
+        <div className="absolute bottom-36 right-8 z-20 hidden md:flex flex-col items-center gap-2 text-white/40">
           <span className="text-[10px] tracking-[0.3em] uppercase font-medium" style={{ writingMode: 'vertical-rl' }}>SCROLL</span>
           <div className="w-px h-12 bg-gradient-to-b from-white/40 to-transparent" />
         </div>
       </section>
 
       {/* Stats Section - Floating cards */}
-      <section className="relative z-10 -mt-20">
+      <section className="relative z-10 -mt-28">
         <div className="container px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {stats.map((stat, i) => (
