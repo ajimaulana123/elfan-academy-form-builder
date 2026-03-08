@@ -9,7 +9,7 @@ const NAV_LINKS = [
   { label: "Beranda", href: "/" },
   { label: "Visi Misi", href: "/#visi-misi" },
   { label: "Program", href: "/#program" },
-  { label: "Profile", href: "/profile" },
+  { label: "Profile", href: "/tentang" },
   { label: "Sejarah", href: "/sejarah" },
   { label: "Tujuan", href: "/tujuan" },
   { label: "Kontak", href: "/kontak" },
