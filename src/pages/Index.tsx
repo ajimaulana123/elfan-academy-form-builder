@@ -538,7 +538,7 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
-            {galleryItems.map((item, i) => (
+            {finalGallery.map((item, i) => (
               <div
                 key={i}
                 className={`group relative overflow-hidden rounded-2xl cursor-pointer ${
