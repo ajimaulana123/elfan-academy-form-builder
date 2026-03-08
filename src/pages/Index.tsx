@@ -3,7 +3,7 @@ import {
   Sparkles, Calendar, User, CheckCircle2, 
   BookOpen, Cpu, GraduationCap, Building2, Monitor, Library,
   Server, UtensilsCrossed, Dumbbell, ChevronDown, Eye, Target,
-  ChevronLeft, ChevronRight, ArrowRight, Star, Zap
+  ChevronLeft, ChevronRight, ArrowRight, Star, Zap, Quote, MessageCircle
 } from "lucide-react";
 import { RegistrationFormCard } from "@/components/RegistrationFormCard";
 import { Link, useNavigate } from "react-router-dom";
@@ -417,6 +417,75 @@ const Index = () => {
                   <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonial Section */}
+      <section id="testimonial" className="py-24 md:py-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-secondary/40" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/4 rounded-full translate-x-1/2 -translate-y-1/2 blur-3xl" />
+        <div className={`container px-4 relative`}>
+          <div className="text-center mb-16">
+            <span className="section-badge mb-4 inline-flex">
+              <MessageCircle className="w-3.5 h-3.5" />
+              Testimoni
+            </span>
+            <h2 className="text-3xl md:text-5xl font-black mt-4">
+              Apa Kata <span className="gradient-text">Mereka?</span>
+            </h2>
+            <p className="text-muted-foreground mt-4 max-w-2xl mx-auto text-lg">
+              Cerita dan pengalaman dari alumni, santri, dan orang tua tentang Elfan AI Academy.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {[
+              {
+                name: "Ahmad Fauzan",
+                role: "Alumni Angkatan 2022",
+                text: "Elfan AI Academy mengubah hidup saya. Saya belajar tahfidz sekaligus coding, dan sekarang bekerja di perusahaan teknologi sambil tetap menjaga hafalan.",
+                rating: 5,
+              },
+              {
+                name: "Ibu Siti Nurhaliza",
+                role: "Orang Tua Santri",
+                text: "Sebagai orang tua, saya sangat bersyukur anak saya bisa belajar di lingkungan yang Islami dengan kurikulum teknologi yang relevan. Perubahan akhlak anak saya luar biasa.",
+                rating: 5,
+              },
+              {
+                name: "Muhammad Rizki",
+                role: "Santri Aktif - Angkatan 2024",
+                text: "Di sini saya tidak hanya belajar agama, tapi juga AI dan programming. Gurunya sangat supportif dan fasilitasnya lengkap. Saya bangga jadi santri Elfan!",
+                rating: 5,
+              },
+            ].map((t, i) => (
+              <Card key={i} className="group relative border-0 shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-card overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent via-primary to-cyan opacity-50" />
+                <CardContent className="p-8 flex flex-col h-full">
+                  <Quote className="w-10 h-10 text-accent/20 mb-4 -scale-x-100" />
+                  <p className="text-muted-foreground leading-relaxed flex-1 italic">
+                    "{t.text}"
+                  </p>
+                  <div className="mt-6 pt-6 border-t border-border/30">
+                    <div className="flex items-center gap-2 mb-2">
+                      {Array.from({ length: t.rating }).map((_, j) => (
+                        <Star key={j} className="w-4 h-4 fill-accent text-accent" />
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-cyan flex items-center justify-center text-white font-bold text-sm shadow-md">
+                        {t.name.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="font-bold text-sm">{t.name}</p>
+                        <p className="text-xs text-muted-foreground">{t.role}</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
