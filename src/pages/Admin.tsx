@@ -33,7 +33,7 @@ import { DocumentViewer } from "@/components/admin/DocumentViewer";
 import { EditRegistrationDialog } from "@/components/admin/EditRegistrationDialog";
 import { DeleteRegistrationDialog } from "@/components/admin/DeleteRegistrationDialog";
 import type { Registration } from "@/types/registration";
-
+import { ContentManager } from "@/components/admin/ContentManager";
 const Admin = () => {
   const { user, signOut } = useAuth();
   const { isAdmin, loading: roleLoading } = useAdminRole();
