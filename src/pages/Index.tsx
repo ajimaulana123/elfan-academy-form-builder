@@ -169,7 +169,7 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Slider */}
-      <section id="hero" className="relative min-h-screen">
+      <section id="hero" className="relative min-h-screen overflow-hidden">
         {heroSlides.map((slide, i) => (
           <div
             key={i}
@@ -177,15 +177,24 @@ const Index = () => {
               i === currentSlide ? "opacity-100 z-10 scale-100" : "opacity-0 z-0 scale-105"
             }`}
           >
-            <div className="hero-section" style={{ backgroundImage: `url(${slide.bg})` }}>
+            <div
+              className="hero-section"
+              style={{
+                backgroundImage: `url(${slide.bg})`,
+                transform: `translateY(${scrollY * 0.4}px) scale(${1 + scrollY * 0.0003})`,
+                willChange: 'transform',
+              }}
+            >
               <div className="hero-overlay" />
-              {/* Decorative particles */}
-              <div className="absolute inset-0 z-[5]">
-                <div className="absolute top-1/4 left-1/4 w-2 h-2 rounded-full bg-accent/30 animate-float" />
-                <div className="absolute top-1/3 right-1/3 w-1.5 h-1.5 rounded-full bg-primary/40 animate-float-delayed" />
-                <div className="absolute bottom-1/3 left-1/3 w-1 h-1 rounded-full bg-white/20 animate-float-slow" />
+              {/* Decorative particles with parallax */}
+              <div className="absolute inset-0 z-[5]" style={{ transform: `translateY(${scrollY * -0.15}px)` }}>
+                <div className="absolute top-1/4 left-1/4 w-3 h-3 rounded-full bg-accent/20 animate-float blur-[1px]" />
+                <div className="absolute top-1/3 right-1/3 w-2 h-2 rounded-full bg-primary/30 animate-float-delayed blur-[1px]" />
+                <div className="absolute bottom-1/3 left-1/3 w-2 h-2 rounded-full bg-white/15 animate-float-slow blur-[1px]" />
+                <div className="absolute top-1/2 right-1/4 w-1.5 h-1.5 rounded-full bg-accent/25 animate-float" />
+                <div className="absolute bottom-1/4 right-1/2 w-2.5 h-2.5 rounded-full bg-primary/20 animate-float-slow" />
               </div>
-              <div className="container relative z-10 px-4">
+              <div className="container relative z-10 px-4" style={{ transform: `translateY(${scrollY * -0.2}px)`, willChange: 'transform' }}>
                 <div className="max-w-2xl">
                   <div className={i === currentSlide ? "animate-fade-up" : ""}>
                     <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent/20 border border-accent/30 text-sm font-semibold text-accent backdrop-blur-md mb-6 shadow-lg">
