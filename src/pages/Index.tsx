@@ -115,6 +115,14 @@ const Index = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideInterval = useRef<ReturnType<typeof setInterval>>();
 
+  // Parallax scroll offset
+  const [scrollY, setScrollY] = useState(0);
+  useEffect(() => {
+    const onScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   useEffect(() => {
     const checkRegistration = async () => {
       if (!user) return;
