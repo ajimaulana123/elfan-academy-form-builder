@@ -93,7 +93,7 @@ export function Navbar() {
           {user ? (
             <>
               <Link to="/profile">
-                <Button variant="ghost" size="sm" className={`gap-2 hidden sm:inline-flex ${!scrolled ? "text-white/80 hover:text-white hover:bg-white/10" : ""}`}>
+                <Button variant="ghost" size="sm" className="gap-2 hidden sm:inline-flex text-white/80 hover:text-white hover:bg-white/10">
                   <User className="h-4 w-4" />
                   Profil
                 </Button>
