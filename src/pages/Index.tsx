@@ -175,11 +175,13 @@ const Index = () => {
     ? dynamicGallery.map(g => ({ src: g.image_url, label: g.caption || "", category: "" }))
     : galleryItems;
 
+  const slidesCount = heroSlides.length;
+
   const startAutoSlide = useCallback(() => {
     slideInterval.current = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+      setCurrentSlide((prev) => (prev + 1) % slidesCount);
     }, 6000);
-  }, []);
+  }, [slidesCount]);
 
   useEffect(() => {
     startAutoSlide();
