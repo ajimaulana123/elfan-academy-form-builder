@@ -13,6 +13,21 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import gallery1 from "@/assets/gallery-1.jpg";
+import gallery2 from "@/assets/gallery-2.jpg";
+import gallery3 from "@/assets/gallery-3.jpg";
+import gallery4 from "@/assets/gallery-4.jpg";
+import gallery5 from "@/assets/gallery-5.jpg";
+import gallery6 from "@/assets/gallery-6.jpg";
+
+const galleryItems = [
+  { src: gallery1, label: "Kegiatan Belajar", category: "Akademik" },
+  { src: gallery2, label: "Tahfidz Al-Quran", category: "Ibadah" },
+  { src: gallery3, label: "Lab Komputer & AI", category: "Teknologi" },
+  { src: gallery4, label: "Kegiatan Olahraga", category: "Ekstrakurikuler" },
+  { src: gallery5, label: "Wisuda Santri", category: "Prestasi" },
+  { src: gallery6, label: "Makan Bersama", category: "Kehidupan Santri" },
+];
 
 const stats = [
   { value: 200, suffix: "+", label: "Santri Aktif", icon: User },
