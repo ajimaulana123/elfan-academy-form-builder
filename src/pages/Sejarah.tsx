@@ -1,17 +1,7 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { Card, CardContent } from "@/components/ui/card";
-import { BookOpen, Users, Award, Building2, Sparkles, Rocket } from "lucide-react";
+import { Lightbulb, Target, Users, Heart, Clock } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
-const timeline = [
-  { year: "2020", title: "Pendirian Yayasan", desc: "Elfan AI Academy didirikan dengan visi mencetak generasi Islam yang melek teknologi.", icon: Sparkles, color: "from-primary to-cyan" },
-  { year: "2021", title: "Angkatan Pertama", desc: "Menerima santri angkatan pertama dengan kurikulum integrasi AI dan pendidikan Islam.", icon: Users, color: "from-accent to-[hsl(35,90%,55%)]" },
-  { year: "2022", title: "Pembangunan Fasilitas", desc: "Membangun lab komputer, server data center, dan perpustakaan digital.", icon: Building2, color: "from-[hsl(var(--success))] to-cyan" },
-  { year: "2023", title: "Prestasi Nasional", desc: "Santri meraih prestasi di berbagai kompetisi teknologi dan tahfidz tingkat nasional.", icon: Award, color: "from-accent to-primary" },
-  { year: "2024", title: "Kurikulum AI Terpadu", desc: "Meluncurkan kurikulum berbasis kecerdasan buatan yang terintegrasi penuh.", icon: BookOpen, color: "from-primary to-violet" },
-  { year: "2025", title: "Ekspansi & Inovasi", desc: "Membuka program studi baru dan meningkatkan kerjasama dengan industri teknologi.", icon: Rocket, color: "from-cyan to-primary" },
-];
 
 function useReveal() {
   const ref = useRef<HTMLDivElement>(null);
@@ -24,8 +14,34 @@ function useReveal() {
   return { ref, visible };
 }
 
+const highlights = [
+  {
+    icon: Lightbulb,
+    title: "Visi Awal",
+    desc: "Respons inovatif terhadap dinamika perubahan yang didorong oleh kemajuan Kecerdasan Buatan (AI)",
+  },
+  {
+    icon: Target,
+    title: "Fokus Pembelajaran",
+    desc: "Pengembangan bidang Desain Multimedia, Broadcasting, dan Data Analyst sebagai pilar utama",
+  },
+  {
+    icon: Users,
+    title: "Kolaborasi Strategis",
+    desc: "Kerjasama dengan praktisi industri, akademisi, pendidik, dan komunitas kreatif teknologi",
+  },
+  {
+    icon: Heart,
+    title: "Nilai Inti",
+    desc: "Integritas, etika digital, dan tanggung jawab sosial sebagai fondasi pembelajaran",
+  },
+];
+
 const Sejarah = () => {
   const hero = useReveal();
+  const section1 = useReveal();
+  const section2 = useReveal();
+  const quote = useReveal();
 
   return (
     <div className="min-h-screen bg-background">
@@ -33,68 +49,86 @@ const Sejarah = () => {
 
       {/* Hero Banner */}
       <section className="pt-16">
-        <div className="relative py-24 md:py-32 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-accent/5" />
-          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
+        <div className="relative py-20 md:py-28 overflow-hidden bg-gradient-to-br from-[hsl(215,45%,12%)] to-[hsl(215,50%,18%)]">
           <div ref={hero.ref} className={`container px-4 relative z-10 text-center transition-all duration-700 ${hero.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <span className="section-badge mb-4 inline-flex">
-              <Sparkles className="w-3.5 h-3.5" />
-              Tentang Kami
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/20 text-accent text-sm font-semibold mb-4">
+              Perjalanan Kami
             </span>
-            <h1 className="text-4xl md:text-6xl font-black mt-4 leading-tight">
-              Sejarah{" "}
-              <span className="gradient-text">Elfan AI Academy</span>
+            <h1 className="text-4xl md:text-6xl font-black text-white mt-2 leading-tight">
+              Sejarah
             </h1>
-            <p className="text-muted-foreground mt-5 max-w-2xl mx-auto text-lg leading-relaxed">
-              Perjalanan kami dalam membangun lembaga pendidikan Islam modern berbasis teknologi AI.
+            <p className="text-white/60 mt-4 max-w-xl mx-auto text-lg leading-relaxed">
+              Perjalanan Elfan AI Academy dalam mencetak generasi digital
             </p>
           </div>
         </div>
       </section>
 
-      {/* Timeline */}
+      {/* Sejarah Pendirian */}
       <section className="py-16 md:py-24">
         <div className="container px-4 max-w-4xl">
-          <div className="relative">
-            {/* Vertical gradient line */}
-            <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/30 via-accent/30 to-primary/10 -translate-x-1/2" />
-
-            <div className="space-y-16">
-              {timeline.map((item, i) => {
-                const reveal = useReveal();
-                return (
-                  <div
-                    key={i}
-                    ref={reveal.ref}
-                    className={`relative flex items-start gap-6 md:gap-12 transition-all duration-700 delay-${i * 100} ${
-                      reveal.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                    } ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}
-                  >
-                    {/* Dot with glow */}
-                    <div className="absolute left-6 md:left-1/2 -translate-x-1/2 z-10">
-                      <div className={`w-5 h-5 rounded-full bg-gradient-to-br ${item.color} border-4 border-background shadow-lg`} />
-                    </div>
-
-                    {/* Content */}
-                    <div className={`ml-14 md:ml-0 md:w-[calc(50%-3rem)] ${i % 2 === 0 ? "md:text-right" : ""}`}>
-                      <Card className="group feature-card border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-                        <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${item.color} opacity-60`} />
-                        <CardContent className="p-6">
-                          <div className={`flex items-center gap-3 mb-3 ${i % 2 === 0 ? "md:justify-end" : ""}`}>
-                            <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center shadow-md group-hover:scale-110 transition-transform`}>
-                              <item.icon className="w-5 h-5 text-white" />
-                            </div>
-                            <span className="text-lg font-black text-accent">{item.year}</span>
-                          </div>
-                          <h3 className="text-lg font-bold mb-2">{item.title}</h3>
-                          <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </div>
-                );
-              })}
+          <div ref={section1.ref} className={`transition-all duration-700 ${section1.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Clock className="w-6 h-6 text-primary" />
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold">
+                Sejarah <span className="text-accent">Pendirian</span>
+              </h2>
             </div>
+
+            <div className="space-y-5 text-muted-foreground leading-relaxed">
+              <p>
+                Seiring dengan pesatnya perkembangan teknologi terbarukan, percepatan perubahan zaman, serta meningkatnya tuntutan dunia kerja global, <strong className="text-foreground">Elfan AI Academy</strong> hadir sebagai respons inovatif terhadap dinamika perubahan yang didorong oleh kemajuan Kecerdasan Buatan (Artificial Intelligence/AI). Kami meyakini bahwa pendidikan merupakan fondasi utama dalam membentuk masa depan peradaban.
+              </p>
+              <p>
+                Oleh karena itu, di era ketika AI menjadi kekuatan transformatif lintas sektor, pendekatan pembelajaran konvensional tidak lagi memadai untuk menjawab tantangan zaman. Elfan AI Academy mengusung visi untuk melahirkan generasi yang tidak hanya adaptif terhadap perkembangan teknologi, tetapi juga mampu berperan sebagai agen perubahan yang berlandaskan nilai-nilai Qur'ani serta memiliki kemandirian ekonomi.
+              </p>
+              <p>
+                Sejak awal pendiriannya, Elfan AI Academy memfokuskan pada pengembangan bidang <strong className="text-foreground">Desain Multimedia, Broadcasting, dan Data Analyst</strong> sebagai pilar utama pembelajaran. Kurikulum dirancang secara adaptif, kontekstual, dan aplikatif dengan mengacu pada kebutuhan industri digital serta tantangan era transformasi teknologi. Dengan pendekatan tersebut, peserta didik dibekali keterampilan yang relevan, berdaya saing tinggi, dan berorientasi pada keberlanjutan.
+              </p>
+              <p>
+                Dalam perjalanannya, Elfan AI Academy terus berkembang melalui kolaborasi strategis dengan praktisi industri, akademisi, pendidik, serta komunitas kreatif dan teknologi. Melalui pendekatan <em>learning by doing</em> dan pemanfaatan teknologi berbasis AI, Elfan AI Academy berupaya membangun ekosistem pendidikan yang inovatif, inklusif, dan berorientasi pada kemaslahatan umat serta kemajuan peradaban.
+              </p>
+            </div>
+          </div>
+
+          {/* Highlight Cards */}
+          <div className="grid md:grid-cols-2 gap-5 mt-14">
+            {highlights.map((item, i) => {
+              const reveal = useReveal();
+              return (
+                <div
+                  key={i}
+                  ref={reveal.ref}
+                  className={`p-6 rounded-2xl border border-border/60 bg-card transition-all duration-500 ${reveal.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+                  style={{ transitionDelay: `${i * 100}ms` }}
+                >
+                  <div className="w-11 h-11 rounded-xl bg-accent/10 flex items-center justify-center mb-4">
+                    <item.icon className="w-5 h-5 text-accent" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2">{item.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Additional paragraphs */}
+          <div ref={section2.ref} className={`mt-14 space-y-5 text-muted-foreground leading-relaxed transition-all duration-700 ${section2.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <p>
+              Untuk mendukung visi tersebut, Elfan AI Academy merancang sistem pembelajaran yang progresif, aplikatif, dan berorientasi pada praktik nyata industri. Setiap program dirancang untuk membekali peserta didik dengan keterampilan masa depan <em>(future skills)</em>, meliputi pemanfaatan kecerdasan buatan, analisis dan pengolahan data, produksi konten multimedia, serta pengembangan kemampuan berpikir kritis dan pemecahan masalah berbasis teknologi.
+            </p>
+            <p>
+              Lebih dari sekadar penguasaan teknologi, Elfan AI Academy menanamkan nilai integritas, etika digital, dan tanggung jawab sosial sebagai fondasi utama dalam setiap proses pembelajaran. Kami meyakini bahwa kemajuan teknologi harus berjalan dan kemaslahatan, bukan sekadar alat konsumsi teknologi.
+            </p>
+          </div>
+
+          {/* Quote Block */}
+          <div ref={quote.ref} className={`mt-14 p-8 rounded-2xl bg-muted/50 border border-border/40 transition-all duration-700 ${quote.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <p className="text-foreground leading-relaxed text-lg">
+              Dengan pendekatan holistik, <span className="text-accent font-semibold">Elfan AI Academy</span> berkomitmen menjadi pusat pengembangan talenta digital yang berdaya saing global, berakar kuat pada nilai-nilai lokal dan Qur'ani, serta mampu menciptakan peluang kemandirian ekonomi melalui inovasi, kewirausahaan digital, dan kontribusi nyata bagi pembangunan masyarakat.
+            </p>
           </div>
         </div>
       </section>
