@@ -36,6 +36,7 @@ import type { Registration } from "@/types/registration";
 
 const Admin = () => {
   const { user, signOut } = useAuth();
+  const { isAdmin, loading: roleLoading } = useAdminRole();
   const navigate = useNavigate();
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loading, setLoading] = useState(true);
