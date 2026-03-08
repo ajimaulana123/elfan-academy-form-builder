@@ -121,7 +121,7 @@ export function Navbar() {
 
           {/* Mobile menu toggle */}
           <button
-            className={`lg:hidden p-2 ${scrolled ? "text-foreground" : "text-white"}`}
+            className="lg:hidden p-2 text-white"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
