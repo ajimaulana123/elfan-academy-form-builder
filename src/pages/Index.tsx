@@ -58,7 +58,7 @@ const programs = [
   { icon: GraduationCap, title: "Program Reguler", desc: "Kurikulum nasional plus dengan pendalaman ilmu agama dan bahasa Arab.", duration: "3 Tahun", accent: "cyan" },
 ];
 
-const heroSlides = [
+const defaultHeroSlides = [
   {
     bg: "/hero-bg.jpg",
     badge: "Tahun Ajaran 2025/2026",
