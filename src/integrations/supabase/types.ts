@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      gallery_photos: {
+        Row: {
+          caption: string | null
+          created_at: string
+          id: string
+          image_url: string
+          sort_order: number
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          image_url: string
+          sort_order?: number
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      hero_images: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string
+          is_active: boolean
+          title: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url: string
+          is_active?: boolean
+          title?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string
+          is_active?: boolean
+          title?: string | null
+        }
+        Relationships: []
+      }
       registrations: {
         Row: {
           akta_url: string | null
@@ -110,6 +158,36 @@ export type Database = {
           tempat_lahir?: string
           tinggi_badan?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      testimonials: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          photo_url: string | null
+          quote: string
+          role: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          photo_url?: string | null
+          quote: string
+          role?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          photo_url?: string | null
+          quote?: string
+          role?: string
         }
         Relationships: []
       }
