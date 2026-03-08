@@ -564,6 +564,47 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Testimonials Section */}
+      {dynamicTestimonials.length > 0 && (
+        <section className="py-24 md:py-32 bg-muted/30 relative">
+          <div className="container px-4">
+            <div className="text-center mb-16">
+              <span className="section-badge mb-4 inline-flex">
+                <Quote className="w-3.5 h-3.5" />
+                Testimoni
+              </span>
+              <h2 className="text-3xl md:text-5xl font-black mt-4">
+                Kata <span className="gradient-text">Mereka</span>
+              </h2>
+              <p className="text-muted-foreground mt-4 max-w-2xl mx-auto text-lg">
+                Cerita dan pengalaman dari santri dan alumni Elfan AI Academy.
+              </p>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+              {dynamicTestimonials.map((t) => (
+                <Card key={t.id} className="glass-card p-6 relative overflow-hidden">
+                  <Quote className="absolute top-4 right-4 w-8 h-8 text-primary/10" />
+                  <div className="flex items-center gap-3 mb-4">
+                    {t.photo_url ? (
+                      <img src={t.photo_url} alt={t.name} className="w-12 h-12 rounded-full object-cover" />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                        {t.name[0]}
+                      </div>
+                    )}
+                    <div>
+                      <p className="font-bold text-sm">{t.name}</p>
+                      <p className="text-xs text-muted-foreground">{t.role}</p>
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground text-sm leading-relaxed italic">"{t.quote}"</p>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Registration / CTA Section */}
       <section id="registration-form" className="py-24 md:py-32 relative overflow-hidden">
         <div className="absolute inset-0 bg-secondary/40" />
