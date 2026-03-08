@@ -98,7 +98,7 @@ export function Navbar() {
                   Profil
                 </Button>
               </Link>
-              <Button variant="ghost" size="sm" onClick={handleLogout} className={`gap-2 hidden sm:inline-flex ${scrolled ? "text-muted-foreground" : "text-white/70 hover:text-white hover:bg-white/10"}`}>
+              <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2 hidden sm:inline-flex text-white/70 hover:text-white hover:bg-white/10">
                 <LogOut className="h-4 w-4" />
                 Keluar
               </Button>
