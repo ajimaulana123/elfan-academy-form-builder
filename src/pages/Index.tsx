@@ -58,7 +58,7 @@ const programs = [
   { icon: GraduationCap, title: "Program Reguler", desc: "Kurikulum nasional plus dengan pendalaman ilmu agama dan bahasa Arab.", duration: "3 Tahun", accent: "cyan" },
 ];
 
-const heroSlides = [
+const defaultHeroSlides = [
   {
     bg: "/hero-bg.jpg",
     badge: "Tahun Ajaran 2025/2026",
@@ -130,8 +130,24 @@ const Index = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideInterval = useRef<ReturnType<typeof setInterval>>();
 
+  // Dynamic content
+  const [dynamicHero, setDynamicHero] = useState<{ image_url: string; title: string | null } | null>(null);
+  const [dynamicGallery, setDynamicGallery] = useState<{ id: string; image_url: string; caption: string | null }[]>([]);
+  const [dynamicTestimonials, setDynamicTestimonials] = useState<{ id: string; name: string; role: string; quote: string; photo_url: string | null }[]>([]);
 
-
+  useEffect(() => {
+    const fetchDynamic = async () => {
+      const [heroRes, galleryRes, testiRes] = await Promise.all([
+        supabase.from("hero_images").select("*").eq("is_active", true).limit(1).maybeSingle(),
+        supabase.from("gallery_photos").select("*").order("sort_order"),
+        supabase.from("testimonials").select("*").eq("is_active", true).order("created_at", { ascending: false }),
+      ]);
+      if (heroRes.data) setDynamicHero(heroRes.data);
+      if (galleryRes.data?.length) setDynamicGallery(galleryRes.data);
+      if (testiRes.data?.length) setDynamicTestimonials(testiRes.data);
+    };
+    fetchDynamic();
+  }, []);
 
   useEffect(() => {
     const checkRegistration = async () => {
@@ -148,6 +164,16 @@ const Index = () => {
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  // Build hero slides: if dynamic hero exists, replace first slide's bg
+  const heroSlides = dynamicHero
+    ? defaultHeroSlides.map((s, i) => i === 0 ? { ...s, bg: dynamicHero.image_url } : s)
+    : defaultHeroSlides;
+
+  // Merge gallery: use dynamic if available, fallback to static
+  const finalGallery = dynamicGallery.length > 0
+    ? dynamicGallery.map(g => ({ src: g.image_url, label: g.caption || "", category: "" }))
+    : galleryItems;
 
   const startAutoSlide = useCallback(() => {
     slideInterval.current = setInterval(() => {
@@ -512,7 +538,7 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
-            {galleryItems.map((item, i) => (
+            {finalGallery.map((item, i) => (
               <div
                 key={i}
                 className={`group relative overflow-hidden rounded-2xl cursor-pointer ${
@@ -537,6 +563,47 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Testimonials Section */}
+      {dynamicTestimonials.length > 0 && (
+        <section className="py-24 md:py-32 bg-muted/30 relative">
+          <div className="container px-4">
+            <div className="text-center mb-16">
+              <span className="section-badge mb-4 inline-flex">
+                <Quote className="w-3.5 h-3.5" />
+                Testimoni
+              </span>
+              <h2 className="text-3xl md:text-5xl font-black mt-4">
+                Kata <span className="gradient-text">Mereka</span>
+              </h2>
+              <p className="text-muted-foreground mt-4 max-w-2xl mx-auto text-lg">
+                Cerita dan pengalaman dari santri dan alumni Elfan AI Academy.
+              </p>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+              {dynamicTestimonials.map((t) => (
+                <Card key={t.id} className="glass-card p-6 relative overflow-hidden">
+                  <Quote className="absolute top-4 right-4 w-8 h-8 text-primary/10" />
+                  <div className="flex items-center gap-3 mb-4">
+                    {t.photo_url ? (
+                      <img src={t.photo_url} alt={t.name} className="w-12 h-12 rounded-full object-cover" />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                        {t.name[0]}
+                      </div>
+                    )}
+                    <div>
+                      <p className="font-bold text-sm">{t.name}</p>
+                      <p className="text-xs text-muted-foreground">{t.role}</p>
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground text-sm leading-relaxed italic">"{t.quote}"</p>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Registration / CTA Section */}
       <section id="registration-form" className="py-24 md:py-32 relative overflow-hidden">
