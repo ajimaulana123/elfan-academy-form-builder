@@ -1,19 +1,7 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { Card, CardContent } from "@/components/ui/card";
-import { Target, BookOpen, Cpu, Heart, Globe, Users, Lightbulb, Shield, Sparkles, ArrowRight } from "lucide-react";
+import { Star, Zap, Link2, Users, Target, CheckCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
-const tujuan = [
-  { icon: BookOpen, title: "Pendidikan Berkualitas", desc: "Menyelenggarakan pendidikan vokasi berkualitas tinggi yang mengintegrasikan nilai-nilai Islam dengan teknologi modern.", color: "from-primary to-cyan" },
-  { icon: Cpu, title: "Penguasaan Teknologi AI", desc: "Membekali santri dengan kemampuan teknologi kecerdasan buatan yang aplikatif dan relevan dengan kebutuhan industri.", color: "from-accent to-[hsl(35,90%,55%)]" },
-  { icon: Heart, title: "Akhlak Mulia", desc: "Membentuk karakter santri yang berakhlakul karimah, beradab, dan memiliki integritas tinggi.", color: "from-[hsl(0,84%,60%)] to-accent" },
-  { icon: Globe, title: "Wawasan Global", desc: "Mencetak lulusan yang memiliki wawasan global dan mampu bersaing di tingkat internasional.", color: "from-cyan to-primary" },
-  { icon: Users, title: "Jiwa Entrepreneurship", desc: "Menumbuhkan jiwa kewirausahaan dan kemampuan menciptakan lapangan kerja bagi diri sendiri dan orang lain.", color: "from-[hsl(var(--success))] to-cyan" },
-  { icon: Lightbulb, title: "Inovasi Digital", desc: "Mendorong santri untuk menciptakan inovasi digital yang bermanfaat bagi masyarakat luas.", color: "from-accent to-primary" },
-  { icon: Shield, title: "Kemandirian", desc: "Membangun karakter mandiri dan tangguh yang siap menghadapi tantangan di era digital.", color: "from-primary to-violet" },
-  { icon: Target, title: "Kontribusi Sosial", desc: "Menghasilkan lulusan yang berkontribusi positif bagi masyarakat lokal dan global.", color: "from-violet to-cyan" },
-];
 
 function useReveal() {
   const ref = useRef<HTMLDivElement>(null);
@@ -26,9 +14,46 @@ function useReveal() {
   return { ref, visible };
 }
 
+const tujuanPembelajaran = [
+  {
+    icon: Star,
+    title: "Individu Beradab",
+    desc: "Membentuk individu yang beradab tinggi dan memiliki kesadaran spiritual beretika Islami dalam pemanfaatan teknologi digital.",
+  },
+  {
+    icon: Zap,
+    title: "Kompetensi Digital",
+    desc: "Mengembangkan kompetensi peserta didik di bidang teknologi digital berbasis AI sesuai kebutuhan industri di bidang Televisi, Desain Multimedia, Broadcasting, dan Data Analyst.",
+  },
+  {
+    icon: Link2,
+    title: "Jiwa Kewirausahaan",
+    desc: "Menumbuhkan jiwa kewirausahaan dan kemandirian melalui pembelajaran berbasis praktik.",
+  },
+  {
+    icon: Users,
+    title: "Lulusan Inovatif",
+    desc: "Menyiapkan lulusan yang inovatif dan mampu berkontribusi bagi masyarakat.",
+  },
+  {
+    icon: Target,
+    title: "Adaptif & Siap",
+    desc: "Mendorong peserta didik untuk mampu beradaptasi dengan perkembangan teknologi dan perubahan dunia kerja.",
+  },
+];
+
+const targetCapaian = [
+  "Terwujudnya lulusan yang memiliki keseimbangan antara adab, kesadaran spiritual, kompetensi teknologi, dan jiwa entrepreneurship.",
+  "Peserta didik mampu menguasai keterampilan teknologi digital dan AI secara aplikatif.",
+  "Dihasilkannya karya, produk digital, atau usaha rintisan oleh peserta didik.",
+  "Terciptanya ekosistem pembelajaran yang adaptif, efisien, dan berbasis teknologi.",
+  "Terbangunnya lulusan yang siap kerja, siap berwirausaha, dan siap berkontribusi di masyarakat.",
+];
+
 const Tujuan = () => {
   const hero = useReveal();
-  const grid = useReveal();
+  const section1 = useReveal();
+  const section2 = useReveal();
 
   return (
     <div className="min-h-screen bg-background">
@@ -36,63 +61,102 @@ const Tujuan = () => {
 
       {/* Hero Banner */}
       <section className="pt-16">
-        <div className="relative py-24 md:py-32 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-accent/5" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent/5 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
+        <div className="relative py-20 md:py-28 overflow-hidden bg-gradient-to-br from-[hsl(215,45%,12%)] to-[hsl(215,50%,18%)]">
           <div ref={hero.ref} className={`container px-4 relative z-10 text-center transition-all duration-700 ${hero.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <span className="section-badge mb-4 inline-flex">
-              <Target className="w-3.5 h-3.5" />
-              Visi Kami
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/20 text-accent text-sm font-semibold mb-4">
+              Arah & Sasaran
             </span>
-            <h1 className="text-4xl md:text-6xl font-black mt-4 leading-tight">
-              Tujuan{" "}
-              <span className="gradient-text">Elfan AI Academy</span>
+            <h1 className="text-4xl md:text-6xl font-black text-white mt-2 leading-tight">
+              Tujuan & Target
             </h1>
-            <p className="text-muted-foreground mt-5 max-w-2xl mx-auto text-lg leading-relaxed">
-              Komitmen kami dalam mencetak generasi unggul yang beradab dan kompeten di bidang teknologi.
+            <p className="text-white/60 mt-4 max-w-xl mx-auto text-lg leading-relaxed">
+              Komitmen kami dalam mencetak generasi unggul
             </p>
           </div>
         </div>
       </section>
 
-      {/* Goals Grid */}
+      {/* Tujuan Pembelajaran */}
       <section className="py-16 md:py-24">
-        <div ref={grid.ref} className={`container px-4 max-w-6xl transition-all duration-700 ${grid.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {tujuan.map((t, i) => (
-              <Card key={i} className="group feature-card text-center border-0 shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-2 overflow-hidden relative">
-                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${t.color} opacity-60`} />
-                <CardContent className="p-7">
-                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${t.color} flex items-center justify-center mx-auto mb-5 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
-                    <t.icon className="w-8 h-8 text-white" />
+        <div className="container px-4 max-w-5xl">
+          <div ref={section1.ref} className={`text-center mb-12 transition-all duration-700 ${section1.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 text-accent text-sm font-semibold mb-4">
+              Tujuan Kami
+            </span>
+            <h2 className="text-2xl md:text-3xl font-bold">
+              Tujuan <span className="text-accent">Pembelajaran</span>
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-5">
+            {tujuanPembelajaran.slice(0, 3).map((item, i) => {
+              const reveal = useReveal();
+              return (
+                <div
+                  key={i}
+                  ref={reveal.ref}
+                  className={`p-6 rounded-2xl border border-border/60 bg-card transition-all duration-500 ${reveal.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+                  style={{ transitionDelay: `${i * 100}ms` }}
+                >
+                  <div className="w-11 h-11 rounded-xl bg-accent/10 flex items-center justify-center mb-4">
+                    <item.icon className="w-5 h-5 text-accent" />
                   </div>
-                  <h3 className="font-bold mb-2 text-base">{t.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{t.desc}</p>
-                </CardContent>
-              </Card>
-            ))}
+                  <h3 className="font-bold text-lg mb-2">{item.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+          <div className="grid md:grid-cols-2 gap-5 mt-5">
+            {tujuanPembelajaran.slice(3).map((item, i) => {
+              const reveal = useReveal();
+              return (
+                <div
+                  key={i}
+                  ref={reveal.ref}
+                  className={`p-6 rounded-2xl border border-border/60 bg-card transition-all duration-500 ${reveal.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+                  style={{ transitionDelay: `${(i + 3) * 100}ms` }}
+                >
+                  <div className="w-11 h-11 rounded-xl bg-accent/10 flex items-center justify-center mb-4">
+                    <item.icon className="w-5 h-5 text-accent" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2">{item.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/3 rounded-full blur-3xl" />
-        <div className="container px-4 text-center relative">
-          <Sparkles className="w-8 h-8 text-accent mx-auto mb-4" />
-          <h2 className="text-2xl md:text-4xl font-black mb-4">
-            Bergabunglah Bersama Kami
-          </h2>
-          <p className="text-muted-foreground max-w-lg mx-auto mb-8 text-lg">
-            Jadilah bagian dari generasi yang siap memimpin di era digital dengan landasan iman yang kuat.
-          </p>
-          <a href="/#registration-form">
-            <button className="btn-gold group flex items-center gap-2 mx-auto">
-              Daftar Sekarang
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </button>
-          </a>
+      {/* Target Capaian */}
+      <section className="py-16 md:py-24 bg-muted/30">
+        <div className="container px-4 max-w-3xl">
+          <div ref={section2.ref} className={`text-center mb-12 transition-all duration-700 ${section2.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 text-accent text-sm font-semibold mb-4">
+              Target Kami
+            </span>
+            <h2 className="text-2xl md:text-3xl font-bold">
+              Target <span className="text-accent">Capaian</span>
+            </h2>
+          </div>
+
+          <div className="space-y-4">
+            {targetCapaian.map((item, i) => {
+              const reveal = useReveal();
+              return (
+                <div
+                  key={i}
+                  ref={reveal.ref}
+                  className={`flex items-start gap-4 p-5 rounded-2xl border border-border/60 bg-card transition-all duration-500 ${reveal.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+                  style={{ transitionDelay: `${i * 80}ms` }}
+                >
+                  <CheckCircle className="w-6 h-6 text-accent shrink-0 mt-0.5" />
+                  <p className="text-muted-foreground leading-relaxed">{item}</p>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
