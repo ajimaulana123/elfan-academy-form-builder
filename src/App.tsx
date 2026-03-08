@@ -11,6 +11,7 @@ import UserAuth from "./pages/UserAuth";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import Profile from "./pages/Profile";
+import ProfileAcademy from "./pages/ProfileAcademy";
 import Sejarah from "./pages/Sejarah";
 import Tujuan from "./pages/Tujuan";
 import Kontak from "./pages/Kontak";
