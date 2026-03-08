@@ -1,20 +1,26 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Phone, Mail, Clock, Instagram, Globe, Send, Sparkles, MessageSquare } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect, useRef } from "react";
 import { toast } from "@/hooks/use-toast";
+import { z } from "zod";
 
-const contactInfo = [
-  { icon: MapPin, title: "Alamat", detail: "Jl. Pendidikan No. 1, Kota Tasikmalaya, Jawa Barat 46115", color: "from-primary to-cyan" },
-  { icon: Phone, title: "Telepon", detail: "+62 812-3456-7890", color: "from-accent to-[hsl(35,90%,55%)]" },
-  { icon: Mail, title: "Email", detail: "info@elfanacademy.ac.id", color: "from-[hsl(var(--success))] to-cyan" },
-  { icon: Clock, title: "Jam Operasional", detail: "Senin - Jumat, 08:00 - 16:00 WIB", color: "from-primary to-violet" },
-  { icon: Instagram, title: "Instagram", detail: "@elfanai.academy", color: "from-accent to-primary" },
-  { icon: Globe, title: "Website", detail: "elfan-academy.vercel.app", color: "from-cyan to-primary" },
+const contactSchema = z.object({
+  nama: z.string().trim().min(1, "Nama wajib diisi").max(100),
+  email: z.string().trim().email("Email tidak valid").max(255),
+  telepon: z.string().max(20).optional(),
+  subjek: z.string().trim().min(1, "Subjek wajib diisi").max(200),
+  pesan: z.string().trim().min(1, "Pesan wajib diisi").max(2000),
+});
+
+const contactCards = [
+  { icon: MapPin, title: "Alamat", detail: "Jl. Pendidikan No. 123, Surakarta, Jawa Tengah 57139" },
+  { icon: Phone, title: "Telepon", detail: "+62 271 123 4567" },
+  { icon: Mail, title: "Email", detail: "info@elfanacademy.id" },
+  { icon: Clock, title: "Jam Operasional", detail: "Senin - Jumat: 08.00 - 16.00 WIB" },
 ];
 
 function useReveal() {
@@ -29,20 +35,27 @@ function useReveal() {
 }
 
 const Kontak = () => {
-  const [formData, setFormData] = useState({ nama: "", email: "", pesan: "" });
+  const [formData, setFormData] = useState({ nama: "", email: "", telepon: "", subjek: "", pesan: "" });
   const [sending, setSending] = useState(false);
   const hero = useReveal();
   const content = useReveal();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const result = contactSchema.safeParse(formData);
+    if (!result.success) {
+      toast({ title: "Error", description: result.error.errors[0]?.message, variant: "destructive" });
+      return;
+    }
     setSending(true);
     setTimeout(() => {
       toast({ title: "Pesan terkirim!", description: "Terima kasih, kami akan segera menghubungi Anda." });
-      setFormData({ nama: "", email: "", pesan: "" });
+      setFormData({ nama: "", email: "", telepon: "", subjek: "", pesan: "" });
       setSending(false);
     }, 1000);
   };
+
+  const mapsUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63295.47291078655!2d110.7695803!3d-7.5706919!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a16704f09c5e7%3A0x4027a76e352ff60!2sSurakarta!5e0!3m2!1sen!2sid!4v1700000000000";
 
   return (
     <div className="min-h-screen bg-background">
@@ -50,21 +63,16 @@ const Kontak = () => {
 
       {/* Hero Banner */}
       <section className="pt-16">
-        <div className="relative py-24 md:py-32 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-accent/5" />
-          <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 -translate-x-1/2 blur-3xl" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/5 rounded-full translate-y-1/2 translate-x-1/2 blur-3xl" />
+        <div className="relative py-20 md:py-28 overflow-hidden bg-gradient-to-br from-[hsl(215,45%,12%)] to-[hsl(215,50%,18%)]">
           <div ref={hero.ref} className={`container px-4 relative z-10 text-center transition-all duration-700 ${hero.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <span className="section-badge mb-4 inline-flex">
-              <MessageSquare className="w-3.5 h-3.5" />
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/20 text-accent text-sm font-semibold mb-4">
               Hubungi Kami
             </span>
-            <h1 className="text-4xl md:text-6xl font-black mt-4 leading-tight">
-              Kontak{" "}
-              <span className="gradient-text">Elfan AI Academy</span>
+            <h1 className="text-4xl md:text-6xl font-black text-white mt-2 leading-tight">
+              Kontak
             </h1>
-            <p className="text-muted-foreground mt-5 max-w-2xl mx-auto text-lg leading-relaxed">
-              Jangan ragu untuk menghubungi kami. Kami siap menjawab pertanyaan Anda.
+            <p className="text-white/60 mt-4 max-w-xl mx-auto text-lg leading-relaxed">
+              Kami siap membantu menjawab pertanyaan Anda tentang pendaftaran, program, dan informasi lainnya
             </p>
           </div>
         </div>
@@ -73,103 +81,120 @@ const Kontak = () => {
       {/* Contact Content */}
       <section className="py-16 md:py-24">
         <div ref={content.ref} className={`container px-4 max-w-6xl transition-all duration-700 ${content.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Contact Info */}
-            <div>
-              <h2 className="text-2xl font-black mb-8 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-accent" />
-                Informasi Kontak
-              </h2>
-              <div className="grid sm:grid-cols-2 gap-4">
-                {contactInfo.map((c, i) => (
-                  <Card key={i} className="group feature-card border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden relative">
-                    <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${c.color} opacity-60`} />
-                    <CardContent className="p-5 flex items-start gap-4">
-                      <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${c.color} flex items-center justify-center shrink-0 shadow-md group-hover:scale-110 transition-transform`}>
-                        <c.icon className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-sm mb-1">{c.title}</h4>
-                        <p className="text-sm text-muted-foreground">{c.detail}</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
+          <div className="grid lg:grid-cols-2 gap-16">
             {/* Contact Form */}
             <div>
-              <h2 className="text-2xl font-black mb-8 flex items-center gap-2">
-                <Send className="w-5 h-5 text-primary" />
-                Kirim Pesan
+              <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                Kirim <span className="text-accent">Pesan</span>
               </h2>
-              <Card className="feature-card border-0 shadow-xl overflow-hidden relative">
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-accent to-cyan opacity-60" />
-                <CardContent className="p-8">
-                  <form onSubmit={handleSubmit} className="space-y-5">
-                    <div>
-                      <label className="text-sm font-semibold mb-2 block">Nama Lengkap</label>
-                      <Input
-                        placeholder="Masukkan nama Anda"
-                        value={formData.nama}
-                        onChange={(e) => setFormData({ ...formData, nama: e.target.value })}
-                        required
-                        className="h-12"
-                      />
+              <p className="text-muted-foreground mb-8">
+                Isi formulir di bawah ini dan tim kami akan menghubungi Anda dalam waktu 1x24 jam.
+              </p>
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid sm:grid-cols-2 gap-5">
+                  <div>
+                    <label className="text-sm font-semibold mb-2 block">Nama Lengkap *</label>
+                    <Input
+                      placeholder="Masukkan nama lengkap"
+                      value={formData.nama}
+                      onChange={(e) => setFormData({ ...formData, nama: e.target.value })}
+                      required
+                      maxLength={100}
+                      className="h-11"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold mb-2 block">Email *</label>
+                    <Input
+                      type="email"
+                      placeholder="contoh@email.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      required
+                      maxLength={255}
+                      className="h-11"
+                    />
+                  </div>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-5">
+                  <div>
+                    <label className="text-sm font-semibold mb-2 block">No. Telepon</label>
+                    <Input
+                      placeholder="+62 812 3456 7890"
+                      value={formData.telepon}
+                      onChange={(e) => setFormData({ ...formData, telepon: e.target.value })}
+                      maxLength={20}
+                      className="h-11"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold mb-2 block">Subjek *</label>
+                    <Input
+                      placeholder="Perihal pesan"
+                      value={formData.subjek}
+                      onChange={(e) => setFormData({ ...formData, subjek: e.target.value })}
+                      required
+                      maxLength={200}
+                      className="h-11"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-semibold mb-2 block">Pesan *</label>
+                  <Textarea
+                    placeholder="Tuliskan pesan atau pertanyaan Anda..."
+                    rows={5}
+                    value={formData.pesan}
+                    onChange={(e) => setFormData({ ...formData, pesan: e.target.value })}
+                    required
+                    maxLength={2000}
+                  />
+                </div>
+                <Button type="submit" className="bg-primary hover:bg-primary/90 text-primary-foreground h-11 px-8 rounded-lg group" disabled={sending}>
+                  <Send className="w-4 h-4 mr-2" />
+                  {sending ? "Mengirim..." : "Kirim Pesan"}
+                </Button>
+              </form>
+            </div>
+
+            {/* Right Side: Info + Map */}
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold mb-8">
+                Informasi <span className="text-accent">Kontak</span>
+              </h2>
+
+              <div className="grid sm:grid-cols-2 gap-4 mb-10">
+                {contactCards.map((c, i) => (
+                  <div key={i} className="p-5 rounded-2xl border border-border/60 bg-card">
+                    <div className="w-11 h-11 rounded-xl bg-accent/10 flex items-center justify-center mb-3">
+                      <c.icon className="w-5 h-5 text-accent" />
                     </div>
-                    <div>
-                      <label className="text-sm font-semibold mb-2 block">Email</label>
-                      <Input
-                        type="email"
-                        placeholder="email@contoh.com"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        required
-                        className="h-12"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-semibold mb-2 block">Pesan</label>
-                      <Textarea
-                        placeholder="Tulis pesan Anda..."
-                        rows={5}
-                        value={formData.pesan}
-                        onChange={(e) => setFormData({ ...formData, pesan: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <Button type="submit" className="w-full btn-gold h-12 text-base group" disabled={sending}>
-                      {sending ? "Mengirim..." : (
-                        <span className="flex items-center gap-2">
-                          Kirim Pesan
-                          <Send className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                        </span>
-                      )}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
+                    <h4 className="font-bold text-sm mb-1">{c.title}</h4>
+                    <p className="text-sm text-muted-foreground">{c.detail}</p>
+                  </div>
+                ))}
+              </div>
+
+              <h3 className="text-xl font-bold mb-4">
+                Lokasi <span className="text-accent">Kampus</span>
+              </h3>
+              <div className="rounded-2xl overflow-hidden border border-border/60">
+                <iframe
+                  src={mapsUrl}
+                  width="100%"
+                  height="280"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Lokasi Elfan AI Academy"
+                />
+              </div>
+              <p className="text-sm text-muted-foreground mt-3 flex items-center gap-1">
+                📍 Klik peta untuk membuka di Google Maps
+              </p>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Map placeholder */}
-      <section className="pb-16">
-        <div className="container px-4 max-w-6xl">
-          <Card className="feature-card overflow-hidden border-0 shadow-xl">
-            <div className="bg-gradient-to-br from-primary/5 via-accent/3 to-primary/5 h-72 flex items-center justify-center relative">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,hsl(var(--primary)/0.06),transparent_60%)]" />
-              <div className="text-center relative">
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                  <MapPin className="w-8 h-8 text-primary/50" />
-                </div>
-                <p className="font-semibold text-foreground">Lokasi Elfan AI Academy</p>
-                <p className="text-sm text-muted-foreground mt-1">Kota Tasikmalaya, Jawa Barat</p>
-              </div>
-            </div>
-          </Card>
         </div>
       </section>
 
