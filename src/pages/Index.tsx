@@ -506,6 +506,50 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Gallery Section */}
+      <section id="gallery" className="py-24 md:py-32 relative">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.03),transparent_60%)]" />
+        <div className="container px-4 relative">
+          <div className="text-center mb-16">
+            <span className="section-badge mb-4 inline-flex">
+              <Camera className="w-3.5 h-3.5" />
+              Gallery
+            </span>
+            <h2 className="text-3xl md:text-5xl font-black mt-4">
+              Kegiatan <span className="gradient-text">Santri</span>
+            </h2>
+            <p className="text-muted-foreground mt-4 max-w-2xl mx-auto text-lg">
+              Momen-momen berharga dari kehidupan sehari-hari santri Elfan AI Academy.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+            {galleryItems.map((item, i) => (
+              <div
+                key={i}
+                className={`group relative overflow-hidden rounded-2xl cursor-pointer ${
+                  i === 0 ? "md:row-span-2" : ""
+                }`}
+              >
+                <img
+                  src={item.src}
+                  alt={item.label}
+                  className={`w-full object-cover transition-all duration-700 group-hover:scale-110 ${
+                    i === 0 ? "h-full min-h-[280px] md:min-h-full" : "h-48 md:h-56"
+                  }`}
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                  <span className="text-xs font-semibold text-accent bg-accent/20 backdrop-blur-sm px-2.5 py-1 rounded-full">{item.category}</span>
+                  <p className="text-white font-bold mt-2 text-sm">{item.label}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Registration / CTA Section */}
       <section id="registration-form" className="py-24 md:py-32 relative overflow-hidden">
         <div className="absolute inset-0 bg-secondary/40" />
