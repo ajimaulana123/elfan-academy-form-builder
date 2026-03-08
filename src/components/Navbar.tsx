@@ -68,8 +68,8 @@ export function Navbar() {
             EA
           </div>
           <div className="leading-tight">
-            <span className="text-sm font-bold text-foreground block">Elfan</span>
-            <span className="text-xs text-muted-foreground">AI Academy</span>
+            <span className={`text-sm font-bold block ${scrolled ? "text-foreground" : "text-white"}`}>Elfan</span>
+            <span className={`text-xs ${scrolled ? "text-muted-foreground" : "text-white/70"}`}>AI Academy</span>
           </div>
         </Link>
 
@@ -81,8 +81,8 @@ export function Navbar() {
               onClick={() => handleNavClick(link.href)}
               className={`text-sm font-medium px-3 py-2 rounded-lg transition-all ${
                 isActive(link.href)
-                  ? "text-primary bg-primary/10"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                  ? scrolled ? "text-primary bg-primary/10" : "text-white bg-white/15"
+                  : scrolled ? "text-muted-foreground hover:text-foreground hover:bg-secondary/50" : "text-white/80 hover:text-white hover:bg-white/10"
               }`}
             >
               {link.label}
@@ -95,19 +95,19 @@ export function Navbar() {
           {user ? (
             <>
               <Link to="/profile">
-                <Button variant="ghost" size="sm" className="gap-2 hidden sm:inline-flex">
+                <Button variant="ghost" size="sm" className={`gap-2 hidden sm:inline-flex ${!scrolled ? "text-white/80 hover:text-white hover:bg-white/10" : ""}`}>
                   <User className="h-4 w-4" />
                   Profil
                 </Button>
               </Link>
-              <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2 text-muted-foreground hidden sm:inline-flex">
+              <Button variant="ghost" size="sm" onClick={handleLogout} className={`gap-2 hidden sm:inline-flex ${scrolled ? "text-muted-foreground" : "text-white/70 hover:text-white hover:bg-white/10"}`}>
                 <LogOut className="h-4 w-4" />
                 Keluar
               </Button>
             </>
           ) : (
             <Link to="/login">
-              <Button variant="ghost" size="sm" className="gap-2 hidden sm:inline-flex">
+              <Button variant="ghost" size="sm" className={`gap-2 hidden sm:inline-flex ${!scrolled ? "text-white/80 hover:text-white hover:bg-white/10" : ""}`}>
                 <User className="h-4 w-4" />
                 Masuk
               </Button>
