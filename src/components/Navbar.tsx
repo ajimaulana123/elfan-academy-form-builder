@@ -147,12 +147,19 @@ export function Navbar() {
           ))}
           <div className="pt-2 border-t border-border/30 space-y-1">
             {user ? (
-              <button
-                onClick={handleLogout}
-                className="block w-full text-left px-4 py-2.5 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-              >
-                Keluar
-              </button>
+              <>
+                <Link to="/profile" onClick={() => setMobileOpen(false)}>
+                  <span className="block px-4 py-2.5 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50">
+                    Profil Saya
+                  </span>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2.5 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                >
+                  Keluar
+                </button>
+              </>
             ) : (
               <Link to="/login" onClick={() => setMobileOpen(false)}>
                 <span className="block px-4 py-2.5 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50">
@@ -160,6 +167,12 @@ export function Navbar() {
                 </span>
               </Link>
             )}
+            <button
+              onClick={() => handleNavClick("/#registration-form")}
+              className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-accent hover:bg-accent/10"
+            >
+              ✨ Daftar Sekarang
+            </button>
           </div>
         </div>
       )}
