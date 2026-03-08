@@ -392,6 +392,12 @@ const Admin = () => {
             )}
           </CardContent>
         </Card>
+
+        {/* Content Management */}
+        <div className="mt-8">
+          <h2 className="text-xl font-bold mb-4">Kelola Konten Website</h2>
+          <ContentManager />
+        </div>
       </main>
 
       {/* Dialogs */}
