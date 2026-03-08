@@ -89,7 +89,7 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle light={!scrolled} />
+          <ThemeToggle light={true} />
           {user ? (
             <>
               <Link to="/profile">
