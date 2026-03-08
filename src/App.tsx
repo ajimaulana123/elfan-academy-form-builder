@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import Index from "./pages/Index";
 import UserAuth from "./pages/UserAuth";
 import Auth from "./pages/Auth";
@@ -27,6 +28,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <ScrollToTop />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/login" element={<UserAuth />} />
