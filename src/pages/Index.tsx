@@ -130,13 +130,8 @@ const Index = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideInterval = useRef<ReturnType<typeof setInterval>>();
 
-  // Parallax scroll offset
-  const [scrollY, setScrollY] = useState(0);
-  useEffect(() => {
-    const onScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+
+
 
   useEffect(() => {
     const checkRegistration = async () => {
@@ -192,24 +187,17 @@ const Index = () => {
               i === currentSlide ? "opacity-100 z-10 scale-100" : "opacity-0 z-0 scale-105"
             }`}
           >
-            <div
-              className="hero-section"
-              style={{
-                backgroundImage: `url(${slide.bg})`,
-                transform: `translateY(${scrollY * 0.4}px) scale(${1 + scrollY * 0.0003})`,
-                willChange: 'transform',
-              }}
-            >
+            <div className="hero-section" style={{ backgroundImage: `url(${slide.bg})` }}>
               <div className="hero-overlay" />
-              {/* Decorative particles with parallax */}
-              <div className="absolute inset-0 z-[5]" style={{ transform: `translateY(${scrollY * -0.15}px)` }}>
+              {/* Decorative particles */}
+              <div className="absolute inset-0 z-[5]">
                 <div className="absolute top-1/4 left-1/4 w-3 h-3 rounded-full bg-accent/20 animate-float blur-[1px]" />
                 <div className="absolute top-1/3 right-1/3 w-2 h-2 rounded-full bg-primary/30 animate-float-delayed blur-[1px]" />
                 <div className="absolute bottom-1/3 left-1/3 w-2 h-2 rounded-full bg-white/15 animate-float-slow blur-[1px]" />
                 <div className="absolute top-1/2 right-1/4 w-1.5 h-1.5 rounded-full bg-accent/25 animate-float" />
                 <div className="absolute bottom-1/4 right-1/2 w-2.5 h-2.5 rounded-full bg-primary/20 animate-float-slow" />
               </div>
-              <div className="container relative z-10 px-4" style={{ transform: `translateY(${scrollY * -0.2}px)`, willChange: 'transform' }}>
+              <div className="container relative z-10 px-4">
                 <div className="max-w-2xl">
                   <div className={i === currentSlide ? "animate-fade-up" : ""}>
                     <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent/20 border border-accent/30 text-sm font-semibold text-accent backdrop-blur-md mb-6 shadow-lg">
@@ -260,7 +248,7 @@ const Index = () => {
         </button>
 
         {/* Dots & progress */}
-        <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+        <div className="absolute bottom-28 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
           {heroSlides.map((_, i) => (
             <button
               key={i}
@@ -273,7 +261,7 @@ const Index = () => {
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 right-8 z-20 hidden md:flex flex-col items-center gap-2 text-white/40">
+        <div className="absolute bottom-6 right-8 z-20 hidden md:flex flex-col items-center gap-2 text-white/40">
           <span className="text-[10px] tracking-[0.3em] uppercase font-medium" style={{ writingMode: 'vertical-rl' }}>SCROLL</span>
           <div className="w-px h-12 bg-gradient-to-b from-white/40 to-transparent" />
         </div>
