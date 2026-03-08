@@ -66,8 +66,8 @@ export function Navbar() {
             EA
           </div>
           <div className="leading-tight">
-            <span className={`text-sm font-bold block ${scrolled ? "text-foreground" : "text-white"}`}>Elfan</span>
-            <span className={`text-xs ${scrolled ? "text-muted-foreground" : "text-white/70"}`}>AI Academy</span>
+            <span className="text-sm font-bold block text-white">Elfan</span>
+            <span className="text-xs text-white/70">AI Academy</span>
           </div>
         </Link>
 
