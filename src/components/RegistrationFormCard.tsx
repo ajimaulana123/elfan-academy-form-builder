@@ -207,48 +207,49 @@ export function RegistrationFormCard() {
               <div className="mb-8">
                 {/* Mobile Step Navigation */}
                 <div className="sm:hidden">
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-between">
                     {STEPS.map((step, index) => {
                       const isActive = activeStep === step.id;
                       const isCompleted = completedSteps.has(step.id);
                       const Icon = step.icon;
+                      const isLast = index === STEPS.length - 1;
                       return (
-                        <button
-                          key={step.id}
-                          type="button"
-                          onClick={() => handleStepClick(step.id)}
-                          className="flex flex-col items-center gap-1.5 flex-1"
-                        >
-                          <div className={cn(
-                            "w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 border-2",
-                            isActive 
-                              ? "bg-primary border-primary text-primary-foreground shadow-lg scale-110" 
-                              : isCompleted 
-                                ? "bg-[hsl(var(--success))] border-[hsl(var(--success))] text-white" 
-                                : "bg-muted border-border text-muted-foreground"
-                          )}>
-                            {isCompleted && !isActive ? (
-                              <CheckCircle2 className="h-4 w-4" />
-                            ) : (
-                              <Icon className="h-4 w-4" />
-                            )}
-                          </div>
-                          <span className={cn(
-                            "text-[10px] font-medium leading-tight text-center",
-                            isActive ? "text-primary" : isCompleted ? "text-[hsl(var(--success))]" : "text-muted-foreground"
-                          )}>
-                            {step.label}
-                          </span>
-                        </button>
+                        <div key={step.id} className="flex items-center flex-1 last:flex-none">
+                          <button
+                            type="button"
+                            onClick={() => handleStepClick(step.id)}
+                            className="flex flex-col items-center gap-1.5 relative z-10"
+                          >
+                            <div className={cn(
+                              "w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300",
+                              isActive 
+                                ? "bg-primary text-primary-foreground shadow-lg ring-4 ring-primary/20" 
+                                : isCompleted 
+                                  ? "bg-[hsl(var(--success))] text-white" 
+                                  : "bg-muted text-muted-foreground"
+                            )}>
+                              {isCompleted && !isActive ? (
+                                <CheckCircle2 className="h-4 w-4" />
+                              ) : (
+                                <Icon className="h-4 w-4" />
+                              )}
+                            </div>
+                            <span className={cn(
+                              "text-[10px] font-medium leading-tight text-center w-14",
+                              isActive ? "text-primary" : isCompleted ? "text-[hsl(var(--success))]" : "text-muted-foreground"
+                            )}>
+                              {step.label}
+                            </span>
+                          </button>
+                          {!isLast && (
+                            <div className={cn(
+                              "h-0.5 flex-1 rounded-full -mx-1 mb-5 transition-all duration-500",
+                              index < currentStepIndex ? "bg-[hsl(var(--success))]" : "bg-muted"
+                            )} />
+                          )}
+                        </div>
                       );
                     })}
-                  </div>
-                  {/* Progress line */}
-                  <div className="relative h-0.5 bg-muted rounded-full mx-6 -mt-[2.6rem] mb-10">
-                    <div 
-                      className="absolute h-full bg-primary rounded-full transition-all duration-500"
-                      style={{ width: `${(currentStepIndex / (STEPS.length - 1)) * 100}%` }}
-                    />
                   </div>
                 </div>
 
