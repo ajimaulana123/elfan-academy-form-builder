@@ -79,8 +79,8 @@ export function Navbar() {
               onClick={() => handleNavClick(link.href)}
               className={`text-sm font-medium px-3 py-2 rounded-lg transition-all ${
                 isActive(link.href)
-                  ? scrolled ? "text-primary bg-primary/10" : "text-white bg-white/15"
-                  : scrolled ? "text-muted-foreground hover:text-foreground hover:bg-secondary/50" : "text-white/80 hover:text-white hover:bg-white/10"
+                  ? "text-white bg-white/15"
+                  : "text-white/70 hover:text-white hover:bg-white/10"
               }`}
             >
               {link.label}
